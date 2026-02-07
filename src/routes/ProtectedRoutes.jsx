@@ -1,32 +1,23 @@
-import { Navigate } from "react-router-dom";
 import { useContext } from "react";
-import { AuthContext } from "./AuthContext";
+import { Navigate, useLocation } from "react-router-dom";
 import Spinner from "../components/Spinner";
+import { AuthContext } from "./AuthContext";
 
-/**
- * ProtectedRoute ensures:
- * 1. User is logged in (session-based)
- * 2. Optional role-based access
- * 3. Displays a spinner while auth is loading
- */
-export default function ProtectedRoute({ children, roles }) {
-  const auth = useContext(AuthContext);
+const ProtectedRoute = ({ children, roles = [] }) => {
+  const { user, loading } = useContext(AuthContext);
+  const location = useLocation();
 
-  if (!auth) return null; // Context not ready yet
-
-  const { user, loading } = auth;
-
-  // Show loading spinner while fetching user session
-  if (loading) return <Spinner />;
-
-  // If not logged in, redirect to login
-  if (!user) return <Navigate to="/" replace />;
-
-  // Role check (optional)
-  if (roles && roles.length > 0 && !roles.includes(user.role)) {
-    return <Navigate to="/" replace />; // or a "Not Authorized" page
+  if (loading) {
+    return <Spinner />;
   }
 
-  // If logged in and authorized, render the protected page
-  return <>{children}</>;
-}
+  if (!user) return <Navigate to="/" state={{ from: location }} replace />;
+
+  if (roles.length > 0 && !roles.includes(user.role)) {
+    return <Navigate to="/404" replace />;
+  }
+
+  return children;
+};
+
+export default ProtectedRoute;

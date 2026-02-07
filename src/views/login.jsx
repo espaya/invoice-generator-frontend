@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../routes/AuthContext";
+import Cookies from "js-cookie";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -32,28 +33,23 @@ export default function Login() {
     }));
   };
 
-  const getCsrfToken = () => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("XSRF-TOKEN="))
-      ?.split("=")[1];
-
-    return token ? decodeURIComponent(token) : "";
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError({});
 
     try {
+      await fetch(`${apiBaseUrl}/sanctum/csrf-cookie`, {
+        credentials: "include",
+      });
+
       const response = await fetch(`${apiBaseUrl}/api/login`, {
         method: "POST",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          "X-XSRF-TOKEN": getCsrfToken(),
+          "X-XSRF-TOKEN": decodeURIComponent(Cookies.get("XSRF-TOKEN") || ""),
         },
         body: JSON.stringify(form),
       });
@@ -67,97 +63,93 @@ export default function Login() {
 
       setUser(data.user);
 
-      await fetchUser();
-
-      navigate(redirect_url);
+      setTimeout(() => {
+        navigate(data.redirect_url, { replace: true });
+      }, 0);
     } catch (err) {
-      setError({
-        general: err.message || "Login failed",
-      });
+      setError({ general: err.message || "An unexpected error occurred" });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div id="main-wrapper">
-      <div className="position-relative overflow-hidden auth-bg min-vh-100 w-100 d-flex align-items-center justify-content-center">
-        <div className="d-flex align-items-center justify-content-center w-100">
-          <div className="col-md-4 d-flex flex-column justify-content-center">
-            <div className="card mb-0 bg-body auth-login m-auto w-100">
-              <div className="row justify-content-center py-4">
-                <div className="col-lg-11">
-                  <div className="card-body">
-                    <a
-                      href="../main/index.html"
-                      className="text-nowrap logo-img d-block mb-4 w-100"
-                    >
-                      <img
-                        src="../assets/images/logos/logo.svg"
-                        className="dark-logo"
-                        alt="Logo-Dark"
+    <div className="authincation section-padding">
+      <div className="container h-100">
+        <div className="row justify-content-center h-100 align-items-center">
+          <div className="col-xl-5 col-md-6">
+            <div className="mini-logo text-center mb-35">
+              <a href="index.html">
+                <img src="images/logo.png" alt="" />
+              </a>
+            </div>
+            <div className="card">
+              <div className="card-header justify-content-center">
+                <h4 className="card-title">Sign in</h4>
+              </div>
+              {error.general && (
+                <small className="alert alert-danger text-center"> {error.general} </small>
+              )}
+              <div className="card-body">
+                <form method="post" onSubmit={handleSubmit}>
+                  <div className="row">
+                    <div className="col-12 mb-16">
+                      <label className="form-label">Email</label>
+                      <input
+                        name="email"
+                        type="text"
+                        className="form-control"
+                        onChange={handleChange}
+                        autoComplete="off"
                       />
-                    </a>
-
-                    <h2 className="lh-base mb-4">Let's get you signed in</h2>
-
-                    {error.general && (
-                      <div className="text-danger mb-3">{error.general}</div>
-                    )}
-
-                    <form onSubmit={handleSubmit}>
-                      <div className="mb-3">
-                        <label className="form-label">Email Address</label>
+                      {error.email && (
+                        <small className="text-danger">
+                          {" "}
+                          {error.email[0]}{" "}
+                        </small>
+                      )}
+                    </div>
+                    <div className="col-12 mb-16">
+                      <label className="form-label">Password</label>
+                      <input
+                        name="password"
+                        type="password"
+                        className="form-control"
+                        onChange={handleChange}
+                      />
+                      {error.password && (
+                        <small className="text-danger">
+                          {" "}
+                          {error.password[0]}{" "}
+                        </small>
+                      )}
+                    </div>
+                    <div className="col-6">
+                      <div className="form-check">
                         <input
-                          type="email"
-                          name="email"
-                          className="form-control"
-                          onChange={handleChange}
-                        />
-                        {error.email && (
-                          <div className="text-danger mt-2">
-                            {error.email[0]}
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="mb-4">
-                        <label className="form-label">Password</label>
-                        <input
-                          type="password"
-                          name="password"
-                          className="form-control"
-                          onChange={handleChange}
-                        />
-                        {error.password && (
-                          <div className="text-danger mt-2">
-                            {error.password[0]}
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="form-check mb-4">
-                        <input
-                          type="checkbox"
                           name="remember"
-                          className="form-check-input"
                           onChange={handleChange}
+                          type="checkbox"
+                          className="form-check-input "
                         />
-                        <label className="form-check-label">
-                          Keep me logged in
-                        </label>
+                        <label className="form-check-label">Remember me</label>
                       </div>
-
-                      <button
-                        type="submit"
-                        className="btn btn-dark w-100"
-                        disabled={loading}
-                      >
-                        {loading ? "Signing in..." : "Sign In"}
-                      </button>
-                    </form>
+                    </div>
+                    <div className="col-6 text-end">
+                      <a href="reset.html">Forgot Password?</a>
+                    </div>
                   </div>
-                </div>
+                  <div className="mt-16 d-grid gap-2">
+                    <button
+                      disabled={loading}
+                      type="submit"
+                      className="btn btn-primary mr-2"
+                    >
+                      {loading ? "Signing in..." : "Sign In"}
+                    </button>
+                  </div>
+                </form>
+                <p className="mt-16 mb-0">{/* recaptcha */}</p>
               </div>
             </div>
           </div>
