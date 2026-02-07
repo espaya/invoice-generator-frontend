@@ -20,6 +20,35 @@
     <link href="vendor/select2/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/style.css" />
 
+    <style>
+      @media print {
+        /* Hide buttons & UI controls */
+        .print-hide {
+          display: none !important;
+        }
+
+        /* Remove modal background & spacing */
+        .modal {
+          position: static !important;
+          background: white !important;
+        }
+
+        .modal-dialog {
+          margin: 0 !important;
+          max-width: 100% !important;
+        }
+
+        .modal-content {
+          box-shadow: none !important;
+          border: none !important;
+        }
+
+        body {
+          background: white !important;
+        }
+      }
+    </style>
+
     <title>Invoicify by techdex</title>
   </head>
   <body class="dashboard">

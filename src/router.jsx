@@ -5,6 +5,10 @@ import UserDashboard from "./views/users/UserDashboard";
 import AdminDashboard from "./views/admin/AdminDashboard";
 import ProtectedRoute from "./routes/ProtectedRoutes";
 import GuestRoute from "./routes/GuestRoute";
+import Invoice from "./views/users/Invoice";
+import Customers from "./views/users/Customers";
+import Settings from "./views/users/Settings";
+import AddInvoice from "./views/users/AddInvoice";
 
 // Centralized route config
 export const ROUTE_CONFIG = {
@@ -21,6 +25,8 @@ export const ROUTE_CONFIG = {
     isProtected: true,
     roles: ["admin"],
   },
+
+  // user
   USER: {
     path: "/user/dashboard",
     element: <UserDashboard />,
@@ -28,6 +34,40 @@ export const ROUTE_CONFIG = {
     isProtected: true,
     roles: ["user"],
   },
+
+    INVOICE: {
+    path: "/user/dashboard/invoice",
+    element: <Invoice />,
+    name: "Invoice",
+    isProtected: true,
+    roles: ["user"],
+  },
+
+  ADD_INVOICE: {
+    path: "/user/dashboard/invoice/add",
+    element: <AddInvoice />,
+    name: "Add Invoice",
+    isProtected: true,
+    roles: ["user"],
+  },
+
+  CUSTOMERS: {
+    path: "/user/dashboard/customers",
+    element: <Customers />,
+    name: "Customers",
+    isProtected: true,
+    roles: ["user"],
+  },
+
+  SETTINGS: {
+    path: "/user/dashboard/settings",
+    element: <Settings />,
+    name: "Settings",
+    isProtected: true,
+    roles: ["user"],
+  },
+
+  // catch-all route
   NOT_FOUND: {
     path: "*",
     element: <NotFound />,

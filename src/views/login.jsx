@@ -63,6 +63,8 @@ export default function Login() {
 
       setUser(data.user);
 
+      await fetchUser();
+
       setTimeout(() => {
         navigate(data.redirect_url, { replace: true });
       }, 0);
