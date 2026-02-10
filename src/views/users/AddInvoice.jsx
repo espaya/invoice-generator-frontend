@@ -4,6 +4,7 @@ import Sidebar from "../../components/sidebar";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import InvoicePreview from "../../components/InvoicePreview";
+import CompanySettings from "../../controllers/CompanySettingsController";
 
 export default function AddInvoice() {
   const apiBase = import.meta.env.VITE_API_URL;
@@ -33,6 +34,13 @@ export default function AddInvoice() {
   const [invoiceDate, setInvoiceDate] = useState(""); // new state
   const [dueDate, setDueDate] = useState(""); // new state
   const [status, setStatus] = useState("pending"); // default status
+
+  const [companySettings, setCompanySettings] = useState([]); // for potential future use
+
+  // Fetch company settings on mount (for potential future use)
+  useEffect(() => {
+    CompanySettings(setLoading, apiBase, setCompanySettings);
+  }, []);
 
   // Fetch customers
   useEffect(() => {
@@ -284,22 +292,22 @@ export default function AddInvoice() {
 
                         {/* Company Info */}
                         <div className="col-md-6 text-end">
-                          <h6>Company Info:</h6>
-                          <input
-                            type="text"
-                            className="form-control mb-2"
-                            placeholder="Company Name"
+                          <img
+                            src="/images/logo.png"
+                            alt="Company Logo"
+                            className="img-fluid mb-2"
+                            width="100"
                           />
-                          <input
-                            type="email"
-                            className="form-control mb-2"
-                            placeholder="Company Email"
-                          />
-                          <textarea
-                            className="form-control"
-                            rows={3}
-                            placeholder="Company Address"
-                          ></textarea>
+                          <p className="mt-10">
+                            <strong>{companySettings?.company_name}</strong>
+                            <br />
+                            {companySettings?.company_address} <br />
+                            {companySettings?.company_email} <br />
+                            {companySettings?.company_phone}
+                          </p>
+                          <p>
+                            <b>TIN:</b> {companySettings?.tin}
+                          </p>
                         </div>
                       </div>
 
@@ -435,7 +443,7 @@ export default function AddInvoice() {
                                   )}
                                 </td>
                                 <td>
-                                  ${(item.quantity * item.unitPrice).toFixed(2)}
+                                  {companySettings?.currency_symbol}{(item.quantity * item.unitPrice).toFixed(2)}
                                 </td>
                                 <td>
                                   <button
@@ -493,12 +501,20 @@ export default function AddInvoice() {
 
                       {/* Totals */}
                       <div className="text-end mb-4 mt-20">
-                        <div>Subtotal: ${subtotal.toFixed(2)}</div>
                         <div>
-                          Tax ({taxPercent}%): ${taxAmount.toFixed(2)}
+                          Subtotal: {companySettings?.currency_symbol}
+                          {subtotal.toFixed(2)}
                         </div>
                         <div>
-                          <strong>Total: ${totalAmount.toFixed(2)}</strong>
+                          Tax ({taxPercent}%):
+                          {companySettings?.currency_symbol}
+                          {taxAmount.toFixed(2)}
+                        </div>
+                        <div>
+                          <strong>
+                            Total: {companySettings?.currency_symbol}
+                            {totalAmount.toFixed(2)}
+                          </strong>
                         </div>
                       </div>
 

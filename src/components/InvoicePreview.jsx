@@ -1,5 +1,6 @@
+import CompanySettings from "../controllers/CompanySettingsController";
 import formatDate from "../utils/FormatDate";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function InvoicePreview({
   setShowPreview,
@@ -16,6 +17,9 @@ export default function InvoicePreview({
   status,
 }) {
   const printRef = useRef();
+  const [loading, setLoading] = useState(false);
+  const apiBase = import.meta.env.VITE_API_URL;
+  const [companySettings, setCompanySettings] = useState([]);
 
   const handlePrint = () => {
     const printContents = printRef.current.innerHTML;
@@ -26,6 +30,10 @@ export default function InvoicePreview({
     document.body.innerHTML = originalContents;
     window.location.reload(); // restore React
   };
+
+  useEffect(() => {
+    CompanySettings(setLoading, apiBase, setCompanySettings);
+  }, []);
 
   return (
     <>
@@ -48,33 +56,50 @@ export default function InvoicePreview({
               <div className="d-flex justify-content-between align-items-center mb-4">
                 <div>
                   <h2>Invoice</h2>
-                  <p>Invoice ID: AUTO-GENERATED</p>
-                  <p>Invoice Date: {formatDate(invoiceDate)}</p>
-                  <p>DueDate: {formatDate(dueDate)}</p>
-                  <p>Status: <span className="badge bg-primary">{status.toUpperCase()}</span></p>
+                  <p>
+                    Invoice ID: AUTO-GENERATED <br />
+                    Invoice Date: {formatDate(invoiceDate)} <br />
+                    DueDate: {formatDate(dueDate)}
+                  </p>
+                  <p>
+                    Status:{" "}
+                    <span className="badge bg-primary">
+                      {status.toUpperCase()}
+                    </span>
+                  </p>
                 </div>
                 <div className="text-end">
-                  <h4>Company Name</h4>
-                  <p>company@example.com</p>
-                  <p>Company Address Line</p>
+                  <img
+                    src="/images/logo.png"
+                    alt="Company Logo"
+                    className="img-fluid mb-2"
+                    width="100"
+                  />
+                  <p className="mt-20">
+                    <strong>{companySettings?.company_name}</strong> <br />
+                    {companySettings?.company_address} <br />
+                    {companySettings?.company_email} <br />
+                    {companySettings?.company_phone}
+                  </p>
                 </div>
               </div>
 
               <hr />
 
               <div className="mb-4">
-                <strong>Bill To:</strong>
-                <p>
+                <strong>Bill To:</strong><br/>
+                <>
                   {selectedCustomer
                     ? `${selectedCustomer.name} (${selectedCustomer.email})`
                     : `${newCustomer.name} (${newCustomer.email})`}
-                </p>
+                </>
+                <br/>
                 {selectedCustomer?.address || newCustomer.address ? (
-                  <p>
+                  <>
                     {selectedCustomer
                       ? selectedCustomer.address
                       : newCustomer.address}
-                  </p>
+                  </>
                 ) : null}
               </div>
 
@@ -125,7 +150,8 @@ export default function InvoicePreview({
                           textAlign: "right",
                         }}
                       >
-                        ${item.unitPrice.toFixed(2)}
+                        {companySettings?.currency_symbol}
+                        {item.unitPrice.toFixed(2)}
                       </td>
                       <td
                         style={{
@@ -134,7 +160,8 @@ export default function InvoicePreview({
                           textAlign: "right",
                         }}
                       >
-                        ${(item.quantity * item.unitPrice).toFixed(2)}
+                        {companySettings?.currency_symbol}
+                        {(item.quantity * item.unitPrice).toFixed(2)}
                       </td>
                     </tr>
                   ))}
@@ -149,11 +176,18 @@ export default function InvoicePreview({
               )}
 
               <div className="text-end" style={{ marginTop: "1rem" }}>
-                <p>Subtotal: ${subtotal.toFixed(2)}</p>
                 <p>
-                  Tax ({taxPercent}%): ${taxAmount.toFixed(2)}
+                  Subtotal: {companySettings?.currency_symbol}
+                  {subtotal.toFixed(2)}
                 </p>
-                <h4>Total: ${totalAmount.toFixed(2)}</h4>
+                <p>
+                  Tax ({taxPercent}%): {companySettings?.currency_symbol}
+                  {taxAmount.toFixed(2)}
+                </p>
+                <h4>
+                  Total: {companySettings?.currency_symbol}
+                  {totalAmount.toFixed(2)}
+                </h4>
               </div>
 
               <hr />

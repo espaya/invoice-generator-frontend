@@ -1,7 +1,32 @@
+import { useEffect, useState } from "react";
 import Header from "../../components/header";
 import Sidebar from "../../components/sidebar";
+import GetInvoices from "../../controllers/GetInvoices";
+import Pagination from "../../controllers/Pagination";
+import formatDate from "../../utils/FormatDate";
+import CompanySettings from "../../controllers/CompanySettingsController";
+import Spinner from "../../components/Spinner";
 
 export default function Invoice() {
+  const apiBase = import.meta.env.VITE_API_URL;
+  const [invoices, setInvoices] = useState({
+    data: [],
+    current_page: 1,
+    last_page: 1,
+  });
+  const [loading, setLoading] = useState(false);
+  const [companySettings, setCompanySettings] = useState([]);
+
+  // Fetch invoices
+  const fetchInvoices = (page = 1) => {
+    GetInvoices(setLoading, apiBase, setInvoices, page);
+  };
+
+  useEffect(() => {
+    fetchInvoices();
+    CompanySettings(setLoading, apiBase, setCompanySettings);
+  }, []);
+
   return (
     <>
       <div id="main-wrapper">
@@ -21,15 +46,6 @@ export default function Invoice() {
                     </p>
                   </div>
                 </div>
-                <div className="col-auto">
-                  <div className="breadcrumbs">
-                    <a href="#">Home </a>
-                    <span>
-                      <i className="ri-arrow-right-s-line" />
-                    </span>
-                    <a href="#">Invoices</a>
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -38,65 +54,99 @@ export default function Invoice() {
               <div className="col-12">
                 <div className="card transparent">
                   <div className="card-body">
-                    <div className="rtable rtable--6cols rtable--collapse">
-                      {/* Table Header */}
-                      <div className="rtable-row rtable-row--head bg-transparent">
-                        <div className="rtable-cell column-heading text-dark">
-                          <strong>Invoice ID</strong>
-                        </div>
-                        <div className="rtable-cell column-heading text-dark">
-                          <strong>Customer Name</strong>
-                        </div>
-                        <div className="rtable-cell column-heading text-dark">
-                          <strong>Date</strong>
-                        </div>
-                        <div className="rtable-cell column-heading text-dark">
-                          <strong>Status</strong>
-                        </div>
-                        <div className="rtable-cell column-heading text-dark">
-                          <strong>Amount</strong>
-                        </div>
-                        <div className="rtable-cell column-heading text-dark">
-                          <strong>Actions</strong>
-                        </div>
-                      </div>
-
-                      {/* Sample Row */}
-                      <div className="rtable-row">
-                        <div className="rtable-cell">
-                          <div className="rtable-cell--content">INV-1001</div>
-                        </div>
-                        <div className="rtable-cell">
-                          <div className="rtable-cell--content">John Doe</div>
-                        </div>
-                        <div className="rtable-cell">
-                          <div className="rtable-cell--content">2026-02-07</div>
-                        </div>
-                        <div className="rtable-cell">
-                          <div className="rtable-cell--content">
-                            <span className="badge bg-success">Paid</span>
+                    {loading ? (
+                      <Spinner />
+                    ) : invoices.data.length === 0 ? (
+                      <p>No invoices found.</p>
+                    ) : (
+                      <>
+                        <div className="rtable rtable--6cols rtable--collapse">
+                          {/* Table Header */}
+                          <div className="rtable-row rtable-row--head bg-transparent">
+                            <div className="rtable-cell column-heading text-dark">
+                              <strong>Invoice ID</strong>
+                            </div>
+                            <div className="rtable-cell column-heading text-dark">
+                              <strong>Customer Name</strong>
+                            </div>
+                            <div className="rtable-cell column-heading text-dark">
+                              <strong>Date</strong>
+                            </div>
+                            <div className="rtable-cell column-heading text-dark">
+                              <strong>Status</strong>
+                            </div>
+                            <div className="rtable-cell column-heading text-dark">
+                              <strong>Amount</strong>
+                            </div>
+                            <div className="rtable-cell column-heading text-dark">
+                              <strong>Actions</strong>
+                            </div>
                           </div>
-                        </div>
-                        <div className="rtable-cell">
-                          <div className="rtable-cell--content">$1,200</div>
-                        </div>
-                        <div className="rtable-cell">
-                          <div className="rtable-cell--content d-flex gap-2">
-                            <button className="btn btn-sm btn-primary">
-                              <i className="ri-eye-fill"></i>
-                            </button>
-                            <button className="btn btn-sm btn-info">
-                                <i className="ri-download-fill"></i>
-                            </button>
-                            <button className="btn btn-sm btn-warning">
-                                <i className="ri-mail-fill"></i>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
 
-                      {/* Add more rows dynamically as needed */}
-                    </div>
+                          {/* Table Rows */}
+                          {invoices.data.map((invoice) => (
+                            <div className="rtable-row" key={invoice.id}>
+                              <div className="rtable-cell">
+                                <div className="rtable-cell--content">
+                                  {invoice.invoice_number}
+                                </div>
+                              </div>
+                              <div className="rtable-cell">
+                                <div className="rtable-cell--content">
+                                  {invoice.customer?.name}
+                                </div>
+                              </div>
+                              <div className="rtable-cell">
+                                <div className="rtable-cell--content">
+                                  {formatDate(invoice.invoice_date)}
+                                </div>
+                              </div>
+                              <div className="rtable-cell">
+                                <div className="rtable-cell--content">
+                                  <span
+                                    className={`badge ${
+                                      invoice.status === "paid"
+                                        ? "bg-success"
+                                        : invoice.status === "pending"
+                                          ? "bg-warning"
+                                          : "bg-danger"
+                                    }`}
+                                  >
+                                    {invoice.status.toUpperCase()}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="rtable-cell">
+                                <div className="rtable-cell--content">
+                                  {companySettings.currency_symbol}
+                                  {Number(invoice.total).toLocaleString()}
+                                </div>
+                              </div>
+                              <div className="rtable-cell">
+                                <div className="rtable-cell--content d-flex gap-2">
+                                  <button className="btn btn-sm btn-primary">
+                                    <i className="ri-eye-fill"></i>
+                                  </button>
+                                  <button className="btn btn-sm btn-info">
+                                    <i className="ri-download-fill"></i>
+                                  </button>
+                                  <button className="btn btn-sm btn-warning">
+                                    <i className="ri-mail-fill"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Pagination */}
+                        <Pagination
+                          currentPage={invoices.current_page}
+                          lastPage={invoices.last_page}
+                          onPageChange={fetchInvoices}
+                        />
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
