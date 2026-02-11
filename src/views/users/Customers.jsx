@@ -111,12 +111,6 @@ export default function Customers() {
                                     <button className="btn btn-sm btn-primary">
                                       <i className="ri-eye-fill"></i>
                                     </button>
-                                    <button className="btn btn-sm btn-info">
-                                      <i className="ri-download-fill"></i>
-                                    </button>
-                                    <button className="btn btn-sm btn-warning">
-                                      <i className="ri-mail-fill"></i>
-                                    </button>
                                   </div>
                                 </div>
                               </div>
