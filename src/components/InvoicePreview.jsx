@@ -1,6 +1,7 @@
 import CompanySettings from "../controllers/CompanySettingsController";
 import formatDate from "../utils/FormatDate";
 import { useEffect, useRef, useState } from "react";
+import handlePrint from "../utils/PrintPreview";
 
 export default function InvoicePreview({
   setShowPreview,
@@ -21,15 +22,6 @@ export default function InvoicePreview({
   const apiBase = import.meta.env.VITE_API_URL;
   const [companySettings, setCompanySettings] = useState([]);
 
-  const handlePrint = () => {
-    const printContents = printRef.current.innerHTML;
-    const originalContents = document.body.innerHTML;
-
-    document.body.innerHTML = printContents;
-    window.print();
-    document.body.innerHTML = originalContents;
-    window.location.reload(); // restore React
-  };
 
   useEffect(() => {
     CompanySettings(setLoading, apiBase, setCompanySettings);
@@ -200,7 +192,7 @@ export default function InvoicePreview({
                 <button
                   type="button"
                   className="btn btn-success"
-                  onClick={handlePrint}
+                  onClick={() => handlePrint(printRef)}
                 >
                   Print Invoice
                 </button>

@@ -6,6 +6,7 @@ import Pagination from "../../controllers/Pagination";
 import formatDate from "../../utils/FormatDate";
 import CompanySettings from "../../controllers/CompanySettingsController";
 import Spinner from "../../components/Spinner";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Invoice() {
   const apiBase = import.meta.env.VITE_API_URL;
@@ -16,10 +17,15 @@ export default function Invoice() {
   });
   const [loading, setLoading] = useState(false);
   const [companySettings, setCompanySettings] = useState([]);
+  const navigate = useNavigate();
 
   // Fetch invoices
   const fetchInvoices = (page = 1) => {
     GetInvoices(setLoading, apiBase, setInvoices, page);
+  };
+
+  const viewInvoice = (invoice_number) => {
+    navigate(`/user/dashboard/invoice/${invoice_number}`);
   };
 
   useEffect(() => {
@@ -124,7 +130,12 @@ export default function Invoice() {
                               </div>
                               <div className="rtable-cell">
                                 <div className="rtable-cell--content d-flex gap-2">
-                                  <button className="btn btn-sm btn-primary">
+                                  <button
+                                    onClick={() =>
+                                      viewInvoice(invoice.invoice_number)
+                                    }
+                                    className="btn btn-sm btn-primary"
+                                  >
                                     <i className="ri-eye-fill"></i>
                                   </button>
                                   <button className="btn btn-sm btn-info">
