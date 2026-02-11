@@ -5,7 +5,7 @@ import Pagination from "../../controllers/Pagination";
 import formatDate from "../../utils/FormatDate";
 import Spinner from "../../components/Spinner";
 import GetCustomers from "../../controllers/GetCustomers";
-import md5 from "blueimp-md5";
+import Gravatar from "../../utils/Gravatar";
 
 export default function Customers() {
   const apiBase = import.meta.env.VITE_API_URL;
@@ -54,7 +54,7 @@ export default function Customers() {
                   {loading ? (
                     <Spinner />
                   ) : (customers?.data?.length ?? 0) === 0 ? (
-                    <p className="alert alert-info">No customers found.</p>
+                    <p>No customers found.</p>
                   ) : (
                     <>
                       <div className="rtable rtable--6cols rtable--collapse">
@@ -86,12 +86,9 @@ export default function Customers() {
                             {customers.data.map((customer) => (
                               <div className="rtable-row" key={customer.id}>
                                 <div className="rtable-cell">
-                                  <img
-                                    src={`https://www.gravatar.com/avatar/${md5(customer.email.trim().toLowerCase())}?s=50&d=identicon`}
-                                    alt={customer.name}
-                                    className="img-fluid rounded-circle"
-                                    width="30"
-                                    height="30"
+                                  <Gravatar
+                                    email={customer.email}
+                                    name={customer.name}
                                   />
                                 </div>
                                 <div className="rtable-cell">
@@ -110,6 +107,12 @@ export default function Customers() {
                                   <div className="d-flex gap-2">
                                     <button className="btn btn-sm btn-primary">
                                       <i className="ri-eye-fill"></i>
+                                    </button>
+                                    <button className="btn btn-sm btn-info">
+                                      <i className="ri-download-fill"></i>
+                                    </button>
+                                    <button className="btn btn-sm btn-warning">
+                                      <i className="ri-mail-fill"></i>
                                     </button>
                                   </div>
                                 </div>
