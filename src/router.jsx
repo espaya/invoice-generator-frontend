@@ -9,6 +9,7 @@ import Invoice from "./views/users/Invoice";
 import Customers from "./views/users/Customers";
 import Settings from "./views/users/Settings";
 import AddInvoice from "./views/users/AddInvoice";
+import SingleInvoice from "./views/users/Single-Invoice";
 
 // Centralized route config
 export const ROUTE_CONFIG = {
@@ -35,7 +36,7 @@ export const ROUTE_CONFIG = {
     roles: ["user"],
   },
 
-    INVOICE: {
+  INVOICE: {
     path: "/user/dashboard/invoice",
     element: <Invoice />,
     name: "Invoice",
@@ -49,6 +50,14 @@ export const ROUTE_CONFIG = {
     name: "Add Invoice",
     isProtected: true,
     roles: ["user"],
+  },
+
+  SINGLE_INVOICE: {
+    path: "/user/dashboard/invoice/:invoice_number",
+    element: <SingleInvoice />,
+    name: "Edit Invoice",
+    isProtected: true,
+    role: ["user"],
   },
 
   CUSTOMERS: {
@@ -88,21 +97,23 @@ export const getRouteElement = (routeName) => {
 
 // Create router
 const router = createBrowserRouter(
-  Object.values(ROUTE_CONFIG).map(({ path, element, isProtected, isGuestOnly, roles }) => ({
-    path,
-    element: isProtected ? (
-      <ProtectedRoute roles={roles}>{element}</ProtectedRoute>
-    ) : isGuestOnly ? (
-      <GuestRoute>{element}</GuestRoute>
-    ) : (
-      element
-    ),
-  }))
+  Object.values(ROUTE_CONFIG).map(
+    ({ path, element, isProtected, isGuestOnly, roles }) => ({
+      path,
+      element: isProtected ? (
+        <ProtectedRoute roles={roles}>{element}</ProtectedRoute>
+      ) : isGuestOnly ? (
+        <GuestRoute>{element}</GuestRoute>
+      ) : (
+        element
+      ),
+    }),
+  ),
 );
 
 export default router;
 
 // Export paths
 export const PATHS = Object.fromEntries(
-  Object.entries(ROUTE_CONFIG).map(([key, value]) => [key, value.path])
+  Object.entries(ROUTE_CONFIG).map(([key, value]) => [key, value.path]),
 );
