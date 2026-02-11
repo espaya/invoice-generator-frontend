@@ -54,7 +54,7 @@ export default function Customers() {
                   {loading ? (
                     <Spinner />
                   ) : (customers?.data?.length ?? 0) === 0 ? (
-                    <p>No customers found.</p>
+                    <p className="alert alert-info">No customers found.</p>
                   ) : (
                     <>
                       <div className="rtable rtable--6cols rtable--collapse">
