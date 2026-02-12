@@ -7,6 +7,8 @@ import formatDate from "../../utils/FormatDate";
 import CompanySettings from "../../controllers/CompanySettingsController";
 import Spinner from "../../components/Spinner";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { sendInvoice } from "../../controllers/InvoiceActions";
 
 export default function Invoice() {
   const apiBase = import.meta.env.VITE_API_URL;
@@ -18,6 +20,11 @@ export default function Invoice() {
   const [loading, setLoading] = useState(false);
   const [companySettings, setCompanySettings] = useState([]);
   const navigate = useNavigate();
+
+  const [actionLoading, setActionLoading] = useState({
+    type: null,
+    invoice_number: null,
+  });
 
   // Fetch invoices
   const fetchInvoices = (page = 1) => {
@@ -32,6 +39,53 @@ export default function Invoice() {
     fetchInvoices();
     CompanySettings(setLoading, apiBase, setCompanySettings);
   }, []);
+
+  const handleDownload = (invoice_number) => {
+    setActionLoading({ type: "download", invoice_number });
+
+    window.open(
+      `${apiBase}/api/invoice/${invoice_number}/download`,
+      "_blank",
+    );
+
+    setTimeout(() => {
+      setActionLoading({ type: null, invoice_number: null });
+    }, 1000);
+  };
+
+  const handleResend = async (invoice_number) => {
+    const prompt = await Swal.fire({
+      icon: "question",
+      title: "Send Invoice",
+      text: "Do you want to send this invoice to the client?",
+      showCancelButton: true,
+      confirmButtonText: "Yes, send",
+      cancelButtonText: "Cancel",
+    });
+
+    if (!prompt.isConfirmed) return;
+
+    setActionLoading({ type: "send", invoice_number });
+
+    const result = await sendInvoice(invoice_number, apiBase);
+
+    setActionLoading({ type: null, invoice_number: null });
+
+    if (!result.success) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: result.message,
+      });
+      return;
+    }
+
+    Swal.fire({
+      icon: "success",
+      title: "Success",
+      text: result.message,
+    });
+  };
 
   return (
     <>
@@ -138,11 +192,55 @@ export default function Invoice() {
                                   >
                                     <i className="ri-eye-fill"></i>
                                   </button>
-                                  <button className="btn btn-sm btn-info">
-                                    <i className="ri-download-fill"></i>
+
+                                  <button
+                                    title="Download this invoice"
+                                    className="btn btn-sm btn-info"
+                                    disabled={
+                                      actionLoading.type === "download" &&
+                                      actionLoading.invoice_number ===
+                                        invoice.invoice_number
+                                    }
+                                    onClick={() =>
+                                      handleDownload(invoice.invoice_number)
+                                    }
+                                  >
+                                    {actionLoading.type === "download" &&
+                                    actionLoading.invoice_number ===
+                                      invoice.invoice_number ? (
+                                      <span
+                                        className="spinner-border spinner-border-sm"
+                                        role="status"
+                                        aria-hidden="true"
+                                      ></span>
+                                    ) : (
+                                      <i className="ri-download-fill"></i>
+                                    )}
                                   </button>
-                                  <button className="btn btn-sm btn-warning">
-                                    <i className="ri-mail-fill"></i>
+
+                                  <button
+                                    title="Resend this invoice to client"
+                                    className="btn btn-sm btn-warning"
+                                    disabled={
+                                      actionLoading.type === "send" &&
+                                      actionLoading.invoice_number ===
+                                        invoice.invoice_number
+                                    }
+                                    onClick={() =>
+                                      handleResend(invoice.invoice_number)
+                                    }
+                                  >
+                                    {actionLoading.type === "send" &&
+                                    actionLoading.invoice_number ===
+                                      invoice.invoice_number ? (
+                                      <span
+                                        className="spinner-border spinner-border-sm"
+                                        role="status"
+                                        aria-hidden="true"
+                                      ></span>
+                                    ) : (
+                                      <i className="ri-mail-fill"></i>
+                                    )}
                                   </button>
                                 </div>
                               </div>

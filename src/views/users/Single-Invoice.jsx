@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Header from "../../components/header";
 import Sidebar from "../../components/sidebar";
 import { useEffect, useState, useRef } from "react";
@@ -7,6 +7,8 @@ import viewInvoice from "../../controllers/ViewInvoice";
 import handlePrint from "../../utils/PrintPreview";
 import formatDate from "../../utils/FormatDate";
 import Spinner from "../../components/Spinner";
+import InvoiceFooter from "../../components/InvoiceFooter";
+import { PATHS } from "../../router";
 
 export default function SingleInvoice() {
   const { invoice_number } = useParams();
@@ -46,11 +48,11 @@ export default function SingleInvoice() {
 
                 <div className="col-auto">
                   <div className="breadcrumbs">
-                    <a href="#">Home </a>
+                    <Link to={PATHS.USER}>Home </Link>
                     <span>
                       <i className="ri-arrow-right-s-line" />
                     </span>
-                    <a href="#">Invoice</a>
+                    <Link to={PATHS.INVOICE}>Invoice</Link>
                     <span>
                       <i className="ri-arrow-right-s-line" />
                     </span>
@@ -101,7 +103,9 @@ export default function SingleInvoice() {
 
                                   <p>
                                     Status:{" "}
-                                    <span className="badge bg-primary">
+                                    <span
+                                      className={`badge ${invoice.status === "success" ? "bg-primary" : "bg-danger"}`}
+                                    >
                                       {invoice.status?.toUpperCase()}
                                     </span>
                                   </p>
@@ -109,7 +113,7 @@ export default function SingleInvoice() {
 
                                 <div className="text-end">
                                   <img
-                                    src="/images/logo.png"
+                                    src="/images/logo.jpeg"
                                     alt="Company Logo"
                                     className="img-fluid mb-2"
                                     width="100"
@@ -281,100 +285,15 @@ export default function SingleInvoice() {
                                 <p>Thank you for your business!</p>
                               </div>
 
-                              <div className="modal-footer print-hide d-flex justify-content-between flex-wrap gap-2">
-                                {/* Left side (secondary actions) */}
-                                <div className="d-flex gap-2 flex-wrap">
-                                  <button
-                                    type="button"
-                                    className="btn btn-success"
-                                    onClick={() => handlePrint(printRef)}
-                                  >
-                                    <i className="ri-printer-fill"></i> Print
-                                  </button>
-
-                                  <button
-                                    type="button"
-                                    className="btn btn-dark"
-                                  >
-                                    <i className="ri-file-download-fill"></i>{" "}
-                                    Download PDF
-                                  </button>
-
-                                  <button
-                                    type="button"
-                                    className="btn btn-info"
-                                  >
-                                    <i className="ri-mail-send-fill"></i>{" "}
-                                    {invoice?.status === "sent"
-                                      ? "Resend Invoice"
-                                      : "Send Invoice"}
-                                  </button>
-                                </div>
-
-                                {/* Right side (primary + dropdown actions) */}
-                                <div className="d-flex gap-2 flex-wrap">
-                                  {/* Mark Paid */}
-                                  <button
-                                    type="button"
-                                    className="btn btn-primary"
-                                    disabled={invoice?.status === "paid"}
-                                  >
-                                    <i className="ri-money-dollar-circle-fill"></i>{" "}
-                                    {invoice?.status === "paid"
-                                      ? "Paid"
-                                      : "Record Payment"}
-                                  </button>
-
-                                  {/* More Actions Dropdown */}
-                                  <div className="dropdown">
-                                    <button
-                                      className="btn btn-outline-secondary dropdown-toggle"
-                                      type="button"
-                                      data-bs-toggle="dropdown"
-                                      aria-expanded="false"
-                                    >
-                                      <i className="ri-more-2-fill"></i> More
-                                    </button>
-
-                                    <ul className="dropdown-menu dropdown-menu-end">
-                                      <li>
-                                        <button className="dropdown-item">
-                                          <i className="ri-edit-box-fill"></i>{" "}
-                                          Edit Invoice
-                                        </button>
-                                      </li>
-
-                                      <li>
-                                        <button className="dropdown-item">
-                                          <i className="ri-file-copy-fill"></i>{" "}
-                                          Duplicate Invoice
-                                        </button>
-                                      </li>
-
-                                      <li>
-                                        <button
-                                          className="dropdown-item"
-                                          disabled={invoice?.status === "paid"}
-                                        >
-                                          <i className="ri-forbid-2-fill"></i>{" "}
-                                          Void / Cancel Invoice
-                                        </button>
-                                      </li>
-
-                                      <li>
-                                        <hr className="dropdown-divider" />
-                                      </li>
-
-                                      <li>
-                                        <button className="dropdown-item text-danger">
-                                          <i className="ri-delete-bin-fill"></i>{" "}
-                                          Delete Invoice
-                                        </button>
-                                      </li>
-                                    </ul>
-                                  </div>
-                                </div>
-                              </div>
+                              <InvoiceFooter
+                                handlePrint={handlePrint}
+                                printRef={printRef}
+                                invoice={invoice}
+                                apiBase={apiBase}
+                                setLoading={setLoading}
+                                setInvoice={setInvoice}
+                                setErrors={setErrors}
+                              />
                             </>
                           )}
                         </div>
