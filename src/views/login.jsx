@@ -82,7 +82,7 @@ export default function Login() {
           <div className="col-xl-5 col-md-6">
             <div className="mini-logo text-center mb-35">
               <a href="index.html">
-                <img src="images/logo.png" alt="" />
+                <img src="images/logo.jpeg" width={150} alt="" />
               </a>
             </div>
             <div className="card">
