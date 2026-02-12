@@ -57,7 +57,7 @@ export default function Customers() {
                     <p>No customers found.</p>
                   ) : (
                     <>
-                      <div className="rtable rtable--6cols rtable--collapse">
+                      <div className="rtable rtable--5cols rtable--collapse">
                         {/* Table Header */}
                         <div className="rtable-row rtable-row--head bg-transparent">
                           <div className="rtable-cell column-heading text-dark">
@@ -107,12 +107,6 @@ export default function Customers() {
                                   <div className="d-flex gap-2">
                                     <button className="btn btn-sm btn-primary">
                                       <i className="ri-eye-fill"></i>
-                                    </button>
-                                    <button className="btn btn-sm btn-info">
-                                      <i className="ri-download-fill"></i>
-                                    </button>
-                                    <button className="btn btn-sm btn-warning">
-                                      <i className="ri-mail-fill"></i>
                                     </button>
                                   </div>
                                 </div>

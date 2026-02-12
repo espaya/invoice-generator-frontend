@@ -1,6 +1,58 @@
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import Swal from "sweetalert2";
+
 import Notification from "./notification";
+import { PATHS } from "../router";
 
 export default function Header() {
+  const apiBase = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
+
+  const [user, setUser] = useState(null);
+
+  // fetch user profile
+  useEffect(() => {
+    fetch(`${apiBase}/api/user/profile`, {
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => setUser(data))
+      .catch((err) => console.error(err));
+  }, [apiBase]);
+
+  // logout
+  const handleLogout = async () => {
+    try {
+      await fetch(`${apiBase}/sanctum/csrf-cookie`, {
+        credentials: "include",
+      });
+
+      await fetch(`${apiBase}/logout`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "X-XSRF-TOKEN": Cookies.get("XSRF-TOKEN"),
+        },
+      });
+
+      Swal.fire(
+        "Logged Out",
+        "You have been logged out successfully",
+        "success",
+      );
+
+      navigate(PATHS.LOGIN);
+    } catch (err) {
+      Swal.fire("Error", err.message || "Logout failed", "error");
+    }
+  };
+
   return (
     <>
       <div className="header">
@@ -14,6 +66,7 @@ export default function Header() {
                       <img src="images/logo.png" alt="" width="40" />
                     </a>
                   </div>
+
                   <div className="search">
                     <form action="#">
                       <div className="input-group">
@@ -29,6 +82,7 @@ export default function Header() {
                     </form>
                   </div>
                 </div>
+
                 <div className="header-right">
                   <div className="dark-light-toggle">
                     <span className="dark">
@@ -45,46 +99,86 @@ export default function Header() {
                     <div data-bs-toggle="dropdown">
                       <div className="user icon-menu active">
                         <span className="thumb">
-                          <img src="/images/avatar/1.png" alt="" />
+                          <img
+                            src={
+                              user?.photo ? user.photo : "/images/avatar.png"
+                            }
+                            alt="profile"
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                              objectPosition: "center",
+                            }}
+                          />
                         </span>
                       </div>
                     </div>
+
                     <div
-                      tabindex="-1"
+                      tabIndex="-1"
                       role="menu"
                       aria-hidden="true"
-                      className="dropdown-menu dropdown-menu dropdown-menu-right"
+                      className="dropdown-menu dropdown-menu-right"
                     >
                       <div className="user-email">
                         <div className="user">
                           <span className="thumb">
-                            <img src="/images/avatar/1.png" alt="" />
+                            <img
+                              src={
+                                user?.photo ? user.photo : "/images/avatar.png"
+                              }
+                              alt="profile"
+                              style={{
+                                // width: "50px",
+                                // height: "50px",
+                                objectFit: "cover",
+                                objectPosition: "center",
+                                // borderRadius: "50%",
+                              }}
+                            />
                           </span>
+
                           <div>
-                            <h5>Fiaz Abdullah</h5>
-                            <span>codeefly@gmail.com</span>
+                            <h5 className="mb-0">
+                              {user?.full_name || "No Full Name"}
+                            </h5>
+
+                            <small className="text-muted d-block">
+                              @{user?.username || "username"}
+                            </small>
+
+                            <span>{user?.email || "No email"}</span>
                           </div>
                         </div>
                       </div>
-                      <a
-                        className="dropdown-item ps-20 pe-20 pt-10 pb-10 d-flex align-items-center border-top  undefined"
-                        href="settings-profile.html"
+
+                      <Link
+                        className="dropdown-item ps-20 pe-20 pt-10 pb-10 d-flex align-items-center border-top"
+                        to={PATHS.SETTINGS}
                       >
                         <span className="fs-18 text-primary me-10">
                           <i className="ri-settings-3-line"></i>
                         </span>
                         Settings
-                      </a>
-                      
-                      <a
-                        className="dropdown-item ps-20 pe-20 pt-10 pb-10 d-flex align-items-center border-top  text-danger"
-                        href="signin.html"
+                      </Link>
+
+                      <button
+                        type="button"
+                        className="dropdown-item ps-20 pe-20 pt-10 pb-10 d-flex align-items-center border-top text-danger"
+                        onClick={handleLogout}
+                        style={{
+                          background: "transparent",
+                          border: "none",
+                          width: "100%",
+                          textAlign: "left",
+                        }}
                       >
-                        <span className="fs-18 text-primary me-10">
+                        <span className="fs-18 text-danger me-10">
                           <i className="ri-logout-circle-line"></i>
                         </span>
                         Logout
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </div>
