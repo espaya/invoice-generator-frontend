@@ -62,7 +62,7 @@ export default function InvoicePreview({
                 </div>
                 <div className="text-end">
                   <img
-                    src="/images/logo.png"
+                    src="/images/logo.jpeg"
                     alt="Company Logo"
                     className="img-fluid mb-2"
                     width="100"

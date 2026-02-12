@@ -11,6 +11,7 @@ import {
 } from "../controllers/InvoiceActions";
 
 import viewInvoice from "../controllers/ViewInvoice";
+import { Link } from "react-router-dom";
 
 export default function InvoiceFooter({
   handlePrint,
@@ -212,9 +213,9 @@ export default function InvoiceFooter({
 
           <ul className="dropdown-menu dropdown-menu-end">
             <li>
-              <button className="dropdown-item">
+              <Link to={`/user/dashboard/invoice/edit/${invoice.invoice_number}`} className="dropdown-item">
                 <i className="ri-edit-box-fill"></i> Edit Invoice
-              </button>
+              </Link>
             </li>
 
             <li>

@@ -10,6 +10,7 @@ import Customers from "./views/users/Customers";
 import Settings from "./views/users/Settings";
 import AddInvoice from "./views/users/AddInvoice";
 import SingleInvoice from "./views/users/Single-Invoice";
+import EditInvoice from "./views/users/EditInvoice";
 
 // Centralized route config
 export const ROUTE_CONFIG = {
@@ -48,6 +49,14 @@ export const ROUTE_CONFIG = {
     path: "/user/dashboard/invoice/add",
     element: <AddInvoice />,
     name: "Add Invoice",
+    isProtected: true,
+    roles: ["user"],
+  },
+
+  EDIT_INVOICE: {
+    path: "/user/dashboard/invoice/edit/:invoice_number",
+    element: <EditInvoice />,
+    name: "Edit Invoice",
     isProtected: true,
     roles: ["user"],
   },
