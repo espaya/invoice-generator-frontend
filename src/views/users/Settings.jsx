@@ -5,7 +5,11 @@ import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import { PATHS } from "../../router";
-import Country from "../../components/Country";
+import ProfilePhoto from "../../components/user/ProfilePhoto";
+import UpdateEmail from "../../components/user/UpdateEmail";
+import UpdatePassword from "../../components/user/UpdatePassword";
+import UpdatePersonalInfo from "../../components/user/UpdatePersonalInfo";
+
 
 export default function Settings() {
   const apiBase = import.meta.env.VITE_API_URL;
@@ -282,7 +286,7 @@ export default function Settings() {
         credentials: "include",
         headers: {
           Accept: "application/json",
-          "X-XSRF-TOKEN": Cookies.get("X-XSRF-TOKEN"),
+          "X-XSRF-TOKEN": Cookies.get("XSRF-TOKEN"),
         },
         body: formData,
       });
@@ -354,294 +358,41 @@ export default function Settings() {
 
               <div className="col-md-9">
                 <div className="row">
-                  {/* PHOTO */}
-                  <div className="col-lg-6">
-                    <div className="card">
-                      <div className="card-header">
-                        <h4 className="card-title">User Profile</h4>
-                      </div>
+                  <div className="row">
+                    <ProfilePhoto
+                      user={user}
+                      profileData={profileData}
+                      updatePhoto={updatePhoto}
+                      handlePhotoChange={handlePhotoChange}
+                      photoPreview={photoPreview}
+                      loadingPhoto={loadingPhoto}
+                      isPhotoSelected={isPhotoSelected}
+                    />
 
-                      <div className="card-body">
-                        <form onSubmit={updatePhoto}>
-                          <div className="d-flex align-items-center mb-3">
-                            <img
-                              className="rounded-circle me-3"
-                              src={
-                                photoPreview
-                                  ? photoPreview
-                                  : user?.photo
-                                    ? user.photo
-                                    : "/images/avatar.png"
-                              }
-                              width={70}
-                              height={70}
-                              alt="profile"
-                              style={{ objectFit: "cover" }}
-                            />
+                    <UpdateEmail
+                      updateEmail={updateEmail}
+                      emailData={emailData}
+                      setEmailData={setEmailData}
+                      loadingEmail={loadingEmail}
+                      isEmailChanged={isEmailChanged}
+                    />
 
-                            <div>
-                              <h5 className="mb-0">
-                                {profileData.full_name || "No Full Name"}
-                              </h5>
-                              <small className="text-muted">
-                                Username: {profileData.username}
-                              </small>
-                            </div>
-                          </div>
+                    <UpdatePassword
+                      updatePassword={updatePassword}
+                      passwordData={passwordData}
+                      setPasswordData={setPasswordData}
+                      loadingPassword={loadingPassword}
+                      isPasswordFilled={isPasswordFilled}
+                    />
 
-                          <input
-                            type="file"
-                            className="form-control mb-3"
-                            accept="image/*"
-                            onChange={(e) =>
-                              handlePhotoChange(e.target.files[0])
-                            }
-                          />
-
-                          <button
-                            type="submit"
-                            className="btn btn-primary"
-                            disabled={loadingPhoto || !isPhotoSelected}
-                          >
-                            {loadingPhoto ? "Uploading..." : "Upload Photo"}
-                          </button>
-                        </form>
-                      </div>
-                    </div>
+                    <UpdatePersonalInfo
+                      updateProfile={updateProfile}
+                      profileData={profileData}
+                      setProfileData={setProfileData}
+                      loadingProfile={loadingProfile}
+                      isProfileChanged={isProfileChanged}
+                    />
                   </div>
-
-                  {/* UPDATE EMAIL */}
-                  <div className="col-lg-6">
-                    <div className="card">
-                      <div className="card-header">
-                        <h4 className="card-title">Update Email</h4>
-                      </div>
-
-                      <div className="card-body">
-                        <form onSubmit={updateEmail}>
-                          <div className="mb-3">
-                            <label className="form-label">Email</label>
-                            <input
-                              type="email"
-                              className="form-control"
-                              value={emailData.email}
-                              onChange={(e) =>
-                                setEmailData({ email: e.target.value })
-                              }
-                            />
-                          </div>
-
-                          <button
-                            type="submit"
-                            className="btn btn-primary"
-                            disabled={loadingEmail || !isEmailChanged}
-                          >
-                            {loadingEmail ? "Saving..." : "Save"}
-                          </button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* UPDATE PASSWORD */}
-                  <div className="col-lg-12">
-                    <div className="card">
-                      <div className="card-header">
-                        <h4 className="card-title">Update Password</h4>
-                      </div>
-
-                      <div className="card-body">
-                        <form onSubmit={updatePassword}>
-                          <div className="mb-3">
-                            <label className="form-label">
-                              Current Password
-                            </label>
-                            <input
-                              type="password"
-                              className="form-control"
-                              value={passwordData.current_password}
-                              onChange={(e) =>
-                                setPasswordData({
-                                  ...passwordData,
-                                  current_password: e.target.value,
-                                })
-                              }
-                            />
-                          </div>
-
-                          <div className="row">
-                            <div className="col-md-6 mb-3">
-                              <label className="form-label">New Password</label>
-                              <input
-                                type="password"
-                                className="form-control"
-                                value={passwordData.new_password}
-                                onChange={(e) =>
-                                  setPasswordData({
-                                    ...passwordData,
-                                    new_password: e.target.value,
-                                  })
-                                }
-                              />
-                            </div>
-
-                            <div className="col-md-6 mb-3">
-                              <label className="form-label">
-                                Confirm Password
-                              </label>
-                              <input
-                                type="password"
-                                className="form-control"
-                                value={passwordData.new_password_confirmation}
-                                onChange={(e) =>
-                                  setPasswordData({
-                                    ...passwordData,
-                                    new_password_confirmation: e.target.value,
-                                  })
-                                }
-                              />
-                            </div>
-                          </div>
-
-                          <button
-                            type="submit"
-                            className="btn btn-primary"
-                            disabled={loadingPassword || !isPasswordFilled}
-                          >
-                            {loadingPassword ? "Saving..." : "Update Password"}
-                          </button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* PERSONAL INFORMATION */}
-                  <div className="col-12">
-                    <div className="card">
-                      <div className="card-header">
-                        <h4 className="card-title">Personal Information</h4>
-                      </div>
-
-                      <div className="card-body">
-                        <form onSubmit={updateProfile}>
-                          <div className="row">
-                            {/* USERNAME */}
-                            <div className="col-md-6 mb-3">
-                              <label className="form-label">Username</label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                value={profileData.username}
-                                onChange={(e) =>
-                                  setProfileData({
-                                    ...profileData,
-                                    username: e.target.value,
-                                  })
-                                }
-                              />
-                            </div>
-
-                            {/* FULL NAME */}
-                            <div className="col-md-6 mb-3">
-                              <label className="form-label">Full Name</label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                value={profileData.full_name}
-                                onChange={(e) =>
-                                  setProfileData({
-                                    ...profileData,
-                                    full_name: e.target.value,
-                                  })
-                                }
-                              />
-                            </div>
-
-                            <div className="col-md-6 mb-3">
-                              <label className="form-label">Phone</label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                value={profileData.phone}
-                                onChange={(e) =>
-                                  setProfileData({
-                                    ...profileData,
-                                    phone: e.target.value,
-                                  })
-                                }
-                              />
-                            </div>
-
-                            <div className="col-md-6 mb-3">
-                              <label className="form-label">Address</label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                value={profileData.address}
-                                onChange={(e) =>
-                                  setProfileData({
-                                    ...profileData,
-                                    address: e.target.value,
-                                  })
-                                }
-                              />
-                            </div>
-
-                            <div className="col-md-6 mb-3">
-                              <label className="form-label">City</label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                value={profileData.city}
-                                onChange={(e) =>
-                                  setProfileData({
-                                    ...profileData,
-                                    city: e.target.value,
-                                  })
-                                }
-                              />
-                            </div>
-
-                            <div className="col-md-6 mb-3">
-                              <label className="form-label">Post Code</label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                value={profileData.post_code}
-                                onChange={(e) =>
-                                  setProfileData({
-                                    ...profileData,
-                                    post_code: e.target.value,
-                                  })
-                                }
-                              />
-                            </div>
-
-                            <Country
-                              profileData={profileData}
-                              setProfileData={setProfileData}
-                            />
-                          </div>
-
-                          <button
-                            type="submit"
-                            className="btn btn-primary"
-                            disabled={loadingProfile || !isProfileChanged}
-                          >
-                            {loadingProfile ? "Saving..." : "Save Changes"}
-                          </button>
-
-                          {!isProfileChanged && (
-                            <small className="text-muted d-block mt-2">
-                              No changes detected
-                            </small>
-                          )}
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* END */}
                 </div>
               </div>
             </div>
