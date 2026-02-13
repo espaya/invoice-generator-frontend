@@ -1,22 +1,29 @@
 import Cookies from "js-cookie";
 
-const GetCustomers = async (setLoading, apiBase, setCustomers, page = 1) => {
+const GetCustomers = async (
+  setLoading,
+  apiBase,
+  setCustomers,
+  page = 1,
+  search = "",
+) => {
   setLoading(true);
-  try {
-    await fetch(`${apiBase}/sanctum/csrf-cookie`, {
-      method: "GET",
-      credentials: "include",
-    });
 
-    const response = await fetch(`${apiBase}/api/get-customers?page=${page}`, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "X-XSRF-TOKEN": Cookies.get("XSRF-TOKEN"),
+  const safeSearch = (search ?? "").toString();
+
+  try {
+    const response = await fetch(
+      `${apiBase}/api/get-customers?page=${page}&search=${encodeURIComponent(
+        safeSearch,
+      )}`,
+      {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+        },
       },
-    });
+    );
 
     const data = await response.json();
 
@@ -25,9 +32,8 @@ const GetCustomers = async (setLoading, apiBase, setCustomers, page = 1) => {
     }
 
     setCustomers(data);
-    
   } catch (e) {
-    console.error(e);
+    console.error("Fetch customers error:", e.message);
   } finally {
     setLoading(false);
   }

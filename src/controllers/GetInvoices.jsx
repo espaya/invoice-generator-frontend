@@ -1,34 +1,37 @@
 import Cookies from "js-cookie";
 
-const GetInvoices = async (setLoading, apiBase, setInvoices, page = 1) => {
+export default async function GetInvoices(
+  setLoading,
+  apiBase,
+  setInvoices,
+  page = 1,
+  search = "",
+) {
   setLoading(true);
+
+  const safeSearch = (search ?? "").toString();
+
   try {
-    await fetch(`${apiBase}/sanctum/csrf-cookie`, {
-      method: "GET",
-      credentials: "include",
-    });
-
-    const response = await fetch(`${apiBase}/api/get-invoices?page=${page}`, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "X-XSRF-TOKEN": Cookies.get("XSRF-TOKEN"),
+    const res = await fetch(
+      `${apiBase}/api/get-invoices?page=${page}&search=${encodeURIComponent(
+        safeSearch,
+      )}`,
+      {
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+        },
       },
-    });
+    );
 
-    const data = await response.json();
+    const data = await res.json();
 
-    if (!response.ok)
-      throw new Error(data.message || "Failed to fetch invoices");
-
-    setInvoices(data);
-  } catch (e) {
-    console.error(e);
+    if (res.ok) {
+      setInvoices(data);
+    }
+  } catch (err) {
+    console.error("Fetch invoices error:", err);
   } finally {
     setLoading(false);
   }
-};
-
-export default GetInvoices;
+}

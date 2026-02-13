@@ -60,21 +60,6 @@ export default function Header() {
                     <img src="images/logo.png" alt="" width="40" />
                   </a>
                 </div>
-
-                <div className="search">
-                  <form action="#">
-                    <div className="input-group">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Search Here..."
-                      />
-                      <span className="input-group-text px-12">
-                        <i className="ri-search-line"></i>
-                      </span>
-                    </div>
-                  </form>
-                </div>
               </div>
 
               <div className="header-right">

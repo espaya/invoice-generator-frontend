@@ -9,21 +9,33 @@ import Gravatar from "../../utils/Gravatar";
 
 export default function Customers() {
   const apiBase = import.meta.env.VITE_API_URL;
+
   const [customers, setCustomers] = useState({
     data: [],
     current_page: 1,
     last_page: 1,
   });
+
   const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
 
   // Fetch customers
-  const fetchCustomers = (page = 1) => {
-    GetCustomers(setLoading, apiBase, setCustomers, page);
+  const fetchCustomers = (page = 1, searchQuery = search) => {
+    GetCustomers(setLoading, apiBase, setCustomers, page, searchQuery);
   };
 
   useEffect(() => {
     fetchCustomers();
   }, []);
+
+  // ✅ Search debounce
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      fetchCustomers(1, search);
+    }, 500);
+
+    return () => clearTimeout(delayDebounce);
+  }, [search]);
 
   return (
     <div id="main-wrapper">
@@ -43,6 +55,26 @@ export default function Customers() {
                   </p>
                 </div>
               </div>
+
+              {/* SEARCH */}
+              <div className="col-md-6">
+                <div className="search">
+                  <form onSubmit={(e) => e.preventDefault()}>
+                    <div className="input-group">
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Search name, email, address..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                      />
+                      <span className="input-group-text px-12">
+                        <i className="ri-search-line"></i>
+                      </span>
+                    </div>
+                  </form>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -54,14 +86,16 @@ export default function Customers() {
                   {loading ? (
                     <Spinner />
                   ) : (customers?.data?.length ?? 0) === 0 ? (
-                    <p>No customers found.</p>
+                    <p className="text-muted">
+                      No customers found {search && `for "${search}"`}
+                    </p>
                   ) : (
                     <>
-                      <div className="rtable rtable--5cols rtable--collapse">
+                      <div className="rtable rtable--6cols rtable--collapse">
                         {/* Table Header */}
                         <div className="rtable-row rtable-row--head bg-transparent">
                           <div className="rtable-cell column-heading text-dark">
-                            <strong>ID</strong>
+                            <strong>Avatar</strong>
                           </div>
                           <div className="rtable-cell column-heading text-dark">
                             <strong>Name</strong>
@@ -81,48 +115,57 @@ export default function Customers() {
                         </div>
 
                         {/* Table Rows */}
-                        {customers?.data?.length > 0 ? (
-                          <div className="rtable-row">
-                            {customers.data.map((customer) => (
-                              <div className="rtable-row" key={customer.id}>
-                                <div className="rtable-cell">
-                                  <Gravatar
-                                    email={customer.email}
-                                    name={customer.name}
-                                  />
-                                </div>
-                                <div className="rtable-cell">
-                                  {customer.name}
-                                </div>
-                                <div className="rtable-cell">
-                                  {customer.email}
-                                </div>
-                                <div className="rtable-cell">
-                                  {customer.address}
-                                </div>
-                                <div className="rtable-cell">
-                                  {formatDate(customer.created_at)}
-                                </div>
-                                <div className="rtable-cell">
-                                  <div className="d-flex gap-2">
-                                    <button className="btn btn-sm btn-primary">
-                                      <i className="ri-eye-fill"></i>
-                                    </button>
-                                  </div>
-                                </div>
+                        {customers.data.map((customer) => (
+                          <div className="rtable-row" key={customer.id}>
+                            <div className="rtable-cell">
+                              <div className="rtable-cell--content">
+                                <Gravatar
+                                  email={customer.email}
+                                  name={customer.name}
+                                />
                               </div>
-                            ))}
+                            </div>
+
+                            <div className="rtable-cell">
+                              <div className="rtable-cell--content">
+                                {customer.name}
+                              </div>
+                            </div>
+
+                            <div className="rtable-cell">
+                              <div className="rtable-cell--content">
+                                {customer.email}
+                              </div>
+                            </div>
+
+                            <div className="rtable-cell">
+                              <div className="rtable-cell--content">
+                                {customer.address || "N/A"}
+                              </div>
+                            </div>
+
+                            <div className="rtable-cell">
+                              <div className="rtable-cell--content">
+                                {formatDate(customer.created_at)}
+                              </div>
+                            </div>
+
+                            <div className="rtable-cell">
+                              <div className="rtable-cell--content">
+                                <button className="btn btn-sm btn-primary">
+                                  <i className="ri-eye-fill"></i>
+                                </button>
+                              </div>
+                            </div>
                           </div>
-                        ) : (
-                          <p>No customers found.</p>
-                        )}
+                        ))}
                       </div>
 
                       {/* Pagination */}
                       <Pagination
-                        currentPage={customers?.current_page ?? 1}
-                        lastPage={customers?.last_page ?? 1}
-                        onPageChange={fetchCustomers}
+                        currentPage={customers.current_page}
+                        lastPage={customers.last_page}
+                        onPageChange={(page) => fetchCustomers(page, search)}
                       />
                     </>
                   )}
