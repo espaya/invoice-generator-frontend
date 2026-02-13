@@ -72,7 +72,7 @@ export default function Header() {
                   </span>
                 </div>
 
-                <Notification />
+                {/* <Notification /> */}
 
                 <div className="dropdown profile_log dropdown">
                   <div data-bs-toggle="dropdown">
