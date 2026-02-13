@@ -10,6 +10,7 @@ export default function ProfilePhoto() {
 
   const [loadingPhoto, setLoadingPhoto] = useState(false);
   const [photoPreview, setPhotoPreview] = useState(null);
+  const [dragActive, setDragActive] = useState(false);
 
   // Cleanup preview URL
   useEffect(() => {
@@ -72,6 +73,33 @@ export default function ProfilePhoto() {
     uploadPhoto(file);
   };
 
+  // drag drop handlers
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+
+    const file = e.dataTransfer.files[0];
+    handlePhotoChange(file);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+  };
+
   return (
     <div className="col-lg-6">
       <div className="card">
@@ -81,45 +109,108 @@ export default function ProfilePhoto() {
 
         <div className="card-body">
           <div className="d-flex align-items-center mb-3">
-            <img
-              className="rounded-circle me-3"
-              src={
-                photoPreview
-                  ? photoPreview
-                  : user?.photo
-                    ? user.photo
-                    : "/images/avatar.png"
-              }
-              width={70}
-              height={70}
-              alt="profile"
+            {/* PHOTO DROPZONE */}
+            <div
               style={{
-                objectFit: "cover",
-                objectPosition: "center",
+                position: "relative",
+                width: "70px",
+                height: "70px",
+                cursor: "pointer",
               }}
-            />
+              onDragEnter={handleDragEnter}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              onClick={() => document.getElementById("photoInput").click()}
+            >
+              <img
+                className={`rounded-circle ${
+                  dragActive ? "border border-3 border-primary" : ""
+                }`}
+                src={
+                  photoPreview
+                    ? photoPreview
+                    : user?.photo
+                      ? user.photo
+                      : "/images/avatar.png"
+                }
+                width={70}
+                height={70}
+                alt="profile"
+                style={{
+                  objectFit: "cover",
+                  objectPosition: "center",
+                }}
+              />
 
-            <div>
+              {/* OVERLAY */}
+              <div
+                className="rounded-circle"
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  background: dragActive
+                    ? "rgba(13, 110, 253, 0.25)"
+                    : "rgba(0,0,0,0.15)",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  opacity: dragActive ? 1 : 0,
+                  transition: "0.2s ease-in-out",
+                }}
+              >
+                <i className="ri-upload-cloud-line text-white fs-20"></i>
+              </div>
+
+              {/* UPLOADING OVERLAY */}
+              {loadingPhoto && (
+                <div
+                  className="rounded-circle"
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    background: "rgba(0,0,0,0.5)",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    color: "white",
+                    fontSize: "12px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Uploading...
+                </div>
+              )}
+            </div>
+
+            {/* USER DETAILS */}
+            <div className="ms-3">
               <h5 className="mb-0">{user?.full_name || "No Full Name"}</h5>
               <small className="text-muted">
                 @{user?.username || "No Username"}
               </small>
-
-              {loadingPhoto && (
-                <div>
-                  <small className="text-primary">Uploading...</small>
-                </div>
-              )}
             </div>
           </div>
 
+          {/* HIDDEN INPUT */}
           <input
             type="file"
-            className="form-control"
+            id="photoInput"
+            className="d-none"
             accept="image/*"
             disabled={loadingPhoto}
             onChange={(e) => handlePhotoChange(e.target.files[0])}
           />
+
+          <small className="text-muted">
+            Click or drag & drop an image on the profile photo to upload.
+          </small>
         </div>
       </div>
     </div>

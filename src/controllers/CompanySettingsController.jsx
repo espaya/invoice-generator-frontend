@@ -4,10 +4,10 @@ const CompanySettings = async (setLoading, apiBase, setCompanySettings) => {
   setLoading(true);
   try {
 
-    await fetch(`${apiBase}/sanctum/csrf-cookie`, {
-      method: "GET",
-      credentials: "include",
-    });
+    // await fetch(`${apiBase}/sanctum/csrf-cookie`, {
+    //   method: "GET",
+    //   credentials: "include",
+    // });
 
     const response = await fetch(`${apiBase}/api/company-settings`, {
       method: "GET",

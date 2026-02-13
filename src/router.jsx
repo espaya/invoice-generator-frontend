@@ -11,6 +11,13 @@ import Settings from "./views/users/Settings";
 import AddInvoice from "./views/users/AddInvoice";
 import SingleInvoice from "./views/users/Single-Invoice";
 import EditInvoice from "./views/users/EditInvoice";
+import AdminSettings from "./views/admin/AdminSettings";
+import AdminReports from "./views/admin/AdminReports";
+import AdminCustomers from "./views/admin/AdminCustomers";
+import AdminInvoice from "./views/admin/AdminInvoice";
+import AdminUsers from "./views/admin/AdminUsers";
+import AdminAddUser from "./views/admin/AdminAddUser";
+import AdminSystemSettings from "./views/admin/AdminSystemSettings";
 
 // Centralized route config
 export const ROUTE_CONFIG = {
@@ -26,10 +33,67 @@ export const ROUTE_CONFIG = {
     name: "Home",
     isGuestOnly: true,
   },
+
   ADMIN: {
     path: "/admin/dashboard",
     element: <AdminDashboard />,
     name: "Admin Dashboard",
+    isProtected: true,
+    roles: ["admin"],
+  },
+
+  ADMIN_USERS: {
+    path: "/admin/dashboard/users",
+    element: <AdminUsers />,
+    name: "Admin Users",
+    isProtected: true,
+    roles: ["admin"],
+  },
+
+  ADMIN_INVOICES: {
+    path: "/admin/dashboard/invoice",
+    element: <AdminInvoice />,
+    name: "Admin Invoice",
+    isProtected: true,
+    roles: ["admin"],
+  },
+
+  ADMIN_CUSTOMERS: {
+    path: "/admin/dashboard/customers",
+    element: <AdminCustomers />,
+    name: "Admin Customers",
+    isProtected: true,
+    roles: ["admin"],
+  },
+
+  ADMIN_REPORTS: {
+    path: "/admin/dashboard/reports",
+    element: <AdminReports />,
+    name: "Admin Reports",
+    isProtected: true,
+    roles: ["admin"],
+  },
+
+  ADMIN_SETTINGS: {
+    path: "/admin/dashboard/settings",
+    element: <AdminSettings />,
+    name: "Admin Settings",
+    isProtected: true,
+    roles: ["admin"],
+  },
+
+  ADMIN_SYSTEM_SETTINGS: {
+    path: "/admin/dashboard/settings/system",
+    element: <AdminSystemSettings />,
+    name: "Admin Settings",
+    isProtected: true,
+    roles: ["admin"],
+  },
+
+  ADMIN_ADD_USER: {
+    path: "/admin/dashboard/users/add",
+    element: <AdminAddUser />,
+    name: "Admin Add User",
     isProtected: true,
     roles: ["admin"],
   },

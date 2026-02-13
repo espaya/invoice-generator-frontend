@@ -1,17 +1,27 @@
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import Notification from "./notification";
 import { PATHS } from "../router";
 import { useUser } from "../context/UserContext";
 import { logoutUser } from "../routes/Logout"; // ✅ import logout helper
+import CompanySettings from "../controllers/CompanySettingsController";
 
 export default function Header() {
   const apiBase = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
 
   const { user, setUser } = useUser();
+
+  const [companySettings, setCompanySettings] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  const logo = companySettings?.logo;
+
+  useEffect(() => {
+    CompanySettings(setLoading, apiBase, setCompanySettings);
+  }, []);
 
   // ✅ fetch user once when header loads
   useEffect(() => {
@@ -57,7 +67,15 @@ export default function Header() {
               <div className="header-left">
                 <div className="brand-logo">
                   <a className="mini-logo" href="index.html">
-                    <img src="images/logo.png" alt="" width="40" />
+                    <img
+                      src={
+                        logo
+                          ? `${apiBase}/storage/${logo}`
+                          : "/images/logo_placeholder.png"
+                      }
+                      alt=""
+                      width="40"
+                    />
                   </a>
                 </div>
               </div>
@@ -102,7 +120,9 @@ export default function Header() {
                       <div className="user">
                         <span className="thumb">
                           <img
-                            src={user?.photo ? user.photo : "/images/avatar.png"}
+                            src={
+                              user?.photo ? user.photo : "/images/avatar.png"
+                            }
                             alt="profile"
                             style={{
                               objectFit: "cover",
