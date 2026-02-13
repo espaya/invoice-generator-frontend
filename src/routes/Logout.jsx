@@ -1,4 +1,5 @@
 import { PATHS } from "../router"; // Your path constants
+import Cookies from "js-cookie";
 
 /**
  * Logout the user safely:
@@ -18,6 +19,8 @@ export const logoutUser = async (setUser, navigate) => {
     localStorage.removeItem("authToken");
     sessionStorage.clear();
 
+    await fetch(`${apiBase}/sanctum/csrf-cookie`, { credentials: "include" });
+
     // 2️⃣ Call logout API (Laravel Sanctum session-based)
     await fetch(`${apiBase}/api/logout`, {
       method: "POST",
@@ -25,15 +28,18 @@ export const logoutUser = async (setUser, navigate) => {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
+        "X-XSRF-TOKEN": decodeURIComponent(Cookies.get("XSRF-TOKEN")),
       },
     });
 
     // 3️⃣ Redirect safely
-    if (navigate) {
-      navigate(PATHS.LOGIN, { replace: true });
-    } else {
-      window.location.replace(PATHS.LOGIN);
-    }
+    // if (navigate) {
+    //   navigate(PATHS.LOGIN, { replace: true });
+    // } else {
+    //   window.location.replace(PATHS.LOGIN);
+    // }
+
+    window.location.href = PATHS.LOGIN;
   } catch (err) {
     console.error("Logout failed:", err);
     window.location.replace(PATHS.LOGIN);

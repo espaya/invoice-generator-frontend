@@ -20,6 +20,12 @@ export const ROUTE_CONFIG = {
     name: "Home",
     isGuestOnly: true,
   },
+  LOGIN: {
+    path: "/",
+    element: <Login />,
+    name: "Home",
+    isGuestOnly: true,
+  },
   ADMIN: {
     path: "/admin/dashboard",
     element: <AdminDashboard />,

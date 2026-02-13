@@ -1,11 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import { useEffect } from "react";
 
 import Notification from "./notification";
 import { PATHS } from "../router";
 import { useUser } from "../context/UserContext";
+import { logoutUser } from "../routes/Logout"; // ✅ import logout helper
 
 export default function Header() {
   const apiBase = import.meta.env.VITE_API_URL;
@@ -30,33 +30,22 @@ export default function Header() {
       .catch((err) => console.error("Header fetch user error:", err));
   }, [apiBase, user, setUser]);
 
-  // logout
+  // ✅ handle logout
   const handleLogout = async () => {
-    try {
-      await fetch(`${apiBase}/sanctum/csrf-cookie`, {
-        credentials: "include",
-      });
+    const confirm = await Swal.fire({
+      title: "Logout?",
+      text: "Are you sure you want to logout?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, Logout",
+      cancelButtonText: "Cancel",
+    });
 
-      await fetch(`${apiBase}/logout`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-          "X-XSRF-TOKEN": Cookies.get("XSRF-TOKEN"),
-        },
-      });
+    if (!confirm.isConfirmed) return;
 
-      Swal.fire(
-        "Logged Out",
-        "You have been logged out successfully",
-        "success",
-      );
+    await logoutUser(setUser, navigate);
 
-      setUser(null);
-      navigate(PATHS.LOGIN);
-    } catch (err) {
-      Swal.fire("Error", err.message || "Logout failed", "error");
-    }
+    Swal.fire("Logged Out", "You have been logged out successfully", "success");
   };
 
   return (
@@ -128,9 +117,7 @@ export default function Header() {
                       <div className="user">
                         <span className="thumb">
                           <img
-                            src={
-                              user?.photo ? user.photo : "/images/avatar.png"
-                            }
+                            src={user?.photo ? user.photo : "/images/avatar.png"}
                             alt="profile"
                             style={{
                               objectFit: "cover",
@@ -163,6 +150,7 @@ export default function Header() {
                       Settings
                     </Link>
 
+                    {/* ✅ LOGOUT BUTTON FIXED */}
                     <button
                       type="button"
                       className="dropdown-item ps-20 pe-20 pt-10 pb-10 d-flex align-items-center border-top text-danger"

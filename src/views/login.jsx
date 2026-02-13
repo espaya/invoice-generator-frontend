@@ -18,6 +18,8 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState({});
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -85,16 +87,22 @@ export default function Login() {
                 <img src="images/logo.jpeg" width={150} alt="" />
               </a>
             </div>
+
             <div className="card">
               <div className="card-header justify-content-center">
                 <h4 className="card-title">Sign in</h4>
               </div>
+
               {error.general && (
-                <small className="alert alert-danger text-center"> {error.general} </small>
+                <small className="alert alert-danger text-center">
+                  {error.general}
+                </small>
               )}
+
               <div className="card-body">
                 <form method="post" onSubmit={handleSubmit}>
                   <div className="row">
+                    {/* EMAIL */}
                     <div className="col-12 mb-16">
                       <label className="form-label">Email</label>
                       <input
@@ -104,43 +112,63 @@ export default function Login() {
                         onChange={handleChange}
                         autoComplete="off"
                       />
+
                       {error.email && (
-                        <small className="text-danger">
-                          {" "}
-                          {error.email[0]}{" "}
-                        </small>
+                        <small className="text-danger">{error.email[0]}</small>
                       )}
                     </div>
+
+                    {/* PASSWORD */}
                     <div className="col-12 mb-16">
                       <label className="form-label">Password</label>
-                      <input
-                        name="password"
-                        type="password"
-                        className="form-control"
-                        onChange={handleChange}
-                      />
+
+                      <div className="input-group">
+                        <input
+                          name="password"
+                          type={showPassword ? "text" : "password"}
+                          className="form-control"
+                          onChange={handleChange}
+                        />
+
+                        <button
+                          type="button"
+                          className="input-group-text"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          <i
+                            className={
+                              showPassword ? "ri-eye-off-line" : "ri-eye-line"
+                            }
+                          ></i>
+                        </button>
+                      </div>
+
                       {error.password && (
                         <small className="text-danger">
-                          {" "}
-                          {error.password[0]}{" "}
+                          {error.password[0]}
                         </small>
                       )}
                     </div>
+
+                    {/* REMEMBER */}
                     <div className="col-6">
                       <div className="form-check">
                         <input
                           name="remember"
                           onChange={handleChange}
                           type="checkbox"
-                          className="form-check-input "
+                          className="form-check-input"
                         />
                         <label className="form-check-label">Remember me</label>
                       </div>
                     </div>
+
                     <div className="col-6 text-end">
                       <a href="reset.html">Forgot Password?</a>
                     </div>
                   </div>
+
                   <div className="mt-16 d-grid gap-2">
                     <button
                       disabled={loading}
@@ -151,6 +179,7 @@ export default function Login() {
                     </button>
                   </div>
                 </form>
+
                 <p className="mt-16 mb-0">{/* recaptcha */}</p>
               </div>
             </div>
