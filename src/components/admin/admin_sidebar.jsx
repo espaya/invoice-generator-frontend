@@ -76,15 +76,6 @@ export default function AdminSidebar() {
             </Link>
           </li>
 
-          {/* REPORTS */}
-          <li className={isActive(PATHS.ADMIN_REPORTS) ? "active" : ""}>
-            <Link to={PATHS.ADMIN_REPORTS}>
-              <span>
-                <i className="ri-bar-chart-fill" />
-              </span>
-              <span className="nav-text">Reports</span>
-            </Link>
-          </li>
 
           {/* SETTINGS */}
           <li className={isActive(PATHS.ADMIN_SETTINGS) ? "active" : ""}>

@@ -12,7 +12,6 @@ import AddInvoice from "./views/users/AddInvoice";
 import SingleInvoice from "./views/users/Single-Invoice";
 import EditInvoice from "./views/users/EditInvoice";
 import AdminSettings from "./views/admin/AdminSettings";
-import AdminReports from "./views/admin/AdminReports";
 import AdminCustomers from "./views/admin/AdminCustomers";
 import AdminInvoice from "./views/admin/AdminInvoice";
 import AdminUsers from "./views/admin/AdminUsers";
@@ -66,13 +65,6 @@ export const ROUTE_CONFIG = {
     roles: ["admin"],
   },
 
-  ADMIN_REPORTS: {
-    path: "/admin/dashboard/reports",
-    element: <AdminReports />,
-    name: "Admin Reports",
-    isProtected: true,
-    roles: ["admin"],
-  },
 
   ADMIN_SETTINGS: {
     path: "/admin/dashboard/settings",

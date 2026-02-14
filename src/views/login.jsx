@@ -1,11 +1,16 @@
-import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../routes/AuthContext";
 import Cookies from "js-cookie";
+import CompanySettings from "../controllers/CompanySettingsController";
+import { PATHS } from "../router";
 
 export default function Login() {
   const navigate = useNavigate();
-  const apiBaseUrl = import.meta.env.VITE_API_URL || "";
+  const apiBase = import.meta.env.VITE_API_URL;
+  const [companySettings, setCompanySettings] = useState({});
+
+  const logo = companySettings?.logo;
 
   const auth = useContext(AuthContext);
 
@@ -14,10 +19,8 @@ export default function Login() {
   }
 
   const { fetchUser, setUser } = auth;
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState({});
-
   const [showPassword, setShowPassword] = useState(false);
 
   const [form, setForm] = useState({
@@ -41,11 +44,11 @@ export default function Login() {
     setError({});
 
     try {
-      await fetch(`${apiBaseUrl}/sanctum/csrf-cookie`, {
+      await fetch(`${apiBase}/sanctum/csrf-cookie`, {
         credentials: "include",
       });
 
-      const response = await fetch(`${apiBaseUrl}/api/login`, {
+      const response = await fetch(`${apiBase}/api/login`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -77,15 +80,27 @@ export default function Login() {
     }
   };
 
+  useEffect(() => {
+    CompanySettings(setLoading, apiBase, setCompanySettings);
+  }, []);
+
   return (
     <div className="authincation section-padding">
       <div className="container h-100">
         <div className="row justify-content-center h-100 align-items-center">
           <div className="col-xl-5 col-md-6">
             <div className="mini-logo text-center mb-35">
-              <a href="index.html">
-                <img src="images/logo.jpeg" width={150} alt="" />
-              </a>
+              <Link to={PATHS.HOME}>
+                <img
+                  src={
+                    logo
+                      ? `${apiBase}/storage/${logo}`
+                      : "/images/logo_placeholder.png"
+                  }
+                  width={150}
+                  alt=""
+                />
+              </Link>
             </div>
 
             <div className="card">

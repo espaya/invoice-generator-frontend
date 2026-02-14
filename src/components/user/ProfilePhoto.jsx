@@ -21,6 +21,14 @@ export default function ProfilePhoto() {
     };
   }, [photoPreview]);
 
+  const removePreview = (e) => {
+    e.stopPropagation(); // prevent opening file picker
+    setPhotoPreview(null);
+
+    const input = document.getElementById("photoInput");
+    if (input) input.value = "";
+  };
+
   const uploadPhoto = async (file) => {
     if (!file) return;
 
@@ -143,7 +151,31 @@ export default function ProfilePhoto() {
                 }}
               />
 
-              {/* OVERLAY */}
+              {/* REMOVE PREVIEW ICON */}
+              {photoPreview && !loadingPhoto && (
+                <button
+                  type="button"
+                  onClick={removePreview}
+                  className="btn btn-danger btn-sm"
+                  style={{
+                    position: "absolute",
+                    top: "-6px",
+                    right: "-6px",
+                    borderRadius: "50%",
+                    width: "22px",
+                    height: "22px",
+                    padding: "0px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    fontSize: "12px",
+                  }}
+                >
+                  <i className="ri-close-line"></i>
+                </button>
+              )}
+
+              {/* DRAG OVERLAY */}
               <div
                 className="rounded-circle"
                 style={{
