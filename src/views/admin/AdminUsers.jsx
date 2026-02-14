@@ -205,9 +205,7 @@ export default function AdminUsers() {
                     </div>
 
                     {/* Loading Skeleton */}
-                    {loading &&
-                      <TableSkeleton/>
-                      }
+                    {loading && <TableSkeleton />}
 
                     {/* Users Rows */}
                     {!loading && users.length > 0
@@ -257,15 +255,13 @@ export default function AdminUsers() {
                                 </button>
 
                                 {/* Edit */}
-                                <button
+                                <Link
+                                  to={`/admin/dashboard/users/edit/${user.id}`}
                                   className="btn btn-sm btn-outline-warning"
                                   title="Edit User"
-                                  onClick={() =>
-                                    alert(`Edit user: ${user.name}`)
-                                  }
                                 >
                                   <i className="ri-edit-2-line"></i>
-                                </button>
+                                </Link>
 
                                 {/* Delete */}
                                 <button

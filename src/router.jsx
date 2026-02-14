@@ -33,6 +33,8 @@ export const ROUTE_CONFIG = {
     isGuestOnly: true,
   },
 
+  // admin routes
+
   ADMIN: {
     path: "/admin/dashboard",
     element: <AdminDashboard />,
@@ -45,6 +47,22 @@ export const ROUTE_CONFIG = {
     path: "/admin/dashboard/users",
     element: <AdminUsers />,
     name: "Admin Users",
+    isProtected: true,
+    roles: ["admin"],
+  },
+
+  ADMIN_EDIT_USERS: {
+    path: "/admin/dashboard/users/edit/:id",
+    element: <AdminAddUser />,
+    name: "Admin Users",
+    isProtected: true,
+    roles: ["admin"],
+  },
+
+  ADMIN_ADD_USER: {
+    path: "/admin/dashboard/users/add",
+    element: <AdminAddUser />,
+    name: "Admin Add User",
     isProtected: true,
     roles: ["admin"],
   },
@@ -65,7 +83,6 @@ export const ROUTE_CONFIG = {
     roles: ["admin"],
   },
 
-
   ADMIN_SETTINGS: {
     path: "/admin/dashboard/settings",
     element: <AdminSettings />,
@@ -78,14 +95,6 @@ export const ROUTE_CONFIG = {
     path: "/admin/dashboard/settings/system",
     element: <AdminSystemSettings />,
     name: "Admin Settings",
-    isProtected: true,
-    roles: ["admin"],
-  },
-
-  ADMIN_ADD_USER: {
-    path: "/admin/dashboard/users/add",
-    element: <AdminAddUser />,
-    name: "Admin Add User",
     isProtected: true,
     roles: ["admin"],
   },
