@@ -212,8 +212,22 @@ export default function AdminUsers() {
                       ? users.map((user) => (
                           <div className="rtable-row" key={user.id}>
                             <div className="rtable-cell topic-cell">
-                              <div className="rtable-cell--content title-content">
-                                {user.name}
+                              <div className="rtable-cell--content title-content d-flex align-items-center">
+                                <img
+                                  className="topic-cell-img"
+                                  src={
+                                    user?.profile?.photo
+                                      ? `${apiBase}/storage/${user?.profile?.photo}`
+                                      : "/images/avatar.png"
+                                  }
+                                  alt=""
+                                  width="50"
+                                />
+                                <span className="topic-cell-span">
+                                  {user?.profile?.full_name
+                                    ? user?.profile?.full_name
+                                    : user.name.toUpperCase()}
+                                </span>
                               </div>
                             </div>
 
