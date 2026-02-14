@@ -3,9 +3,9 @@ import Header from "../../components/header";
 import Sidebar from "../../components/sidebar";
 import Pagination from "../../controllers/Pagination";
 import formatDate from "../../utils/FormatDate";
-import Spinner from "../../components/Spinner";
 import GetCustomers from "../../controllers/GetCustomers";
 import Gravatar from "../../utils/Gravatar";
+import TableSkeleton from "../../components/TableSkeleton";
 
 export default function Customers() {
   const apiBase = import.meta.env.VITE_API_URL;
@@ -84,7 +84,7 @@ export default function Customers() {
               <div className="card transparent">
                 <div className="card-body">
                   {loading ? (
-                    <Spinner />
+                    <TableSkeleton />
                   ) : (customers?.data?.length ?? 0) === 0 ? (
                     <p className="text-muted">
                       No customers found {search && `for "${search}"`}

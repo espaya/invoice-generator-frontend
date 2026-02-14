@@ -5,10 +5,10 @@ import GetInvoices from "../../controllers/GetInvoices";
 import Pagination from "../../controllers/Pagination";
 import formatDate from "../../utils/FormatDate";
 import CompanySettings from "../../controllers/CompanySettingsController";
-import Spinner from "../../components/Spinner";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { sendInvoice } from "../../controllers/InvoiceActions";
+import TableSkeleton from "../../components/TableSkeleton";
 
 export default function Invoice() {
   const apiBase = import.meta.env.VITE_API_URL;
@@ -144,7 +144,7 @@ export default function Invoice() {
               <div className="card transparent">
                 <div className="card-body">
                   {loading ? (
-                    <Spinner />
+                    <TableSkeleton />
                   ) : invoices.data.length === 0 ? (
                     <p className="text-muted alert alert-info text-center">
                       No invoices found{" "}

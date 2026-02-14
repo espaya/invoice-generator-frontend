@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Spinner from "../../Spinner";
 import formatDate from "../../../utils/FormatDate";
 import CompanySettings from "../../../controllers/CompanySettingsController";
+import StatWidgetSkeleton from "../../StatWidgetSkeleton";
 
 export default function InvoiceAnalytics() {
   const apiBase = import.meta.env.VITE_API_URL;
@@ -63,7 +64,7 @@ export default function InvoiceAnalytics() {
 
         <div className="card-body">
           {loading ? (
-            <Spinner />
+            <StatWidgetSkeleton />
           ) : invoices.length === 0 ? (
             <p className="text-muted">No invoices found.</p>
           ) : (
