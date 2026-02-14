@@ -258,15 +258,13 @@ export default function AdminUsers() {
                             <div className="rtable-cell sales-cell">
                               <div className="d-flex gap-2">
                                 {/* View */}
-                                <button
+                                <Link
+                                  to={`/admin/dashboard/users/${user.id}`}
                                   className="btn btn-sm btn-outline-info"
                                   title="View User"
-                                  onClick={() =>
-                                    alert(`View user: ${user.name}`)
-                                  }
                                 >
                                   <i className="ri-eye-line"></i>
-                                </button>
+                                </Link>
 
                                 {/* Edit */}
                                 <Link

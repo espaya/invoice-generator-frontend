@@ -18,6 +18,10 @@ import AdminUsers from "./views/admin/AdminUsers";
 import AdminAddUser from "./views/admin/AdminAddUser";
 import AdminSystemSettings from "./views/admin/AdminSystemSettings";
 import WhiteLabel from "./views/admin/WhiteLabel";
+import AdminViewUser from "./views/admin/AdminViewUser";
+import AdminUserInvoice from "./views/admin/AdminUserInvoice";
+import AdminUserSettings from "./views/admin/AdminUserSettings";
+import AdminSingleInvoice from "./views/admin/AdminSingleInvoice";
 
 // Centralized route config
 export const ROUTE_CONFIG = {
@@ -68,6 +72,30 @@ export const ROUTE_CONFIG = {
     roles: ["admin"],
   },
 
+  ADMIN_VIEW_USER: {
+    path: "/admin/dashboard/users/:id",
+    element: <AdminViewUser />,
+    name: "View User",
+    isProtected: true,
+    roles: ["admin"],
+  },
+
+  ADMIN_USER_INVOICE: {
+    path: "/admin/dashboard/users/:id/invoice",
+    element: <AdminUserInvoice />,
+    name: "View User Invoice",
+    isProtected: true,
+    roles: ["admin"],
+  },
+
+  ADMIN_USER_SETTINGS: {
+    path: "/admin/dashboard/users/:id/settings",
+    element: <AdminUserSettings />,
+    name: "View User Settings",
+    isProtected: true,
+    roles: ["admin"],
+  },
+
   ADMIN_INVOICES: {
     path: "/admin/dashboard/invoice",
     element: <AdminInvoice />,
@@ -108,6 +136,14 @@ export const ROUTE_CONFIG = {
     roles: ["admin"],
   },
 
+  ADMIN_SINGLE_INVOICE: {
+    path: "/admin/dashboard/invoice/:invoice_number",
+    element: <AdminSingleInvoice />,
+    name: "View Invoice",
+    isProtected: true,
+    role: ["user"],
+  },
+
   // user
   USER: {
     path: "/user/dashboard",
@@ -144,7 +180,7 @@ export const ROUTE_CONFIG = {
   SINGLE_INVOICE: {
     path: "/user/dashboard/invoice/:invoice_number",
     element: <SingleInvoice />,
-    name: "Edit Invoice",
+    name: "View Invoice",
     isProtected: true,
     role: ["user"],
   },
