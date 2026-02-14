@@ -22,6 +22,14 @@ export default function AdminSettingsMenu() {
             System
           </Link>
         </li>
+
+        <li className={isActive(PATHS.ADMIN_SYSTEM_WHITE_LABEL) ? "active" : ""}>
+          <Link to={PATHS.ADMIN_SYSTEM_WHITE_LABEL}>
+            <i className="ri-arrow-right-s-line" />
+            White Label
+          </Link>
+        </li>
+
       </ul>
     </div>
   );

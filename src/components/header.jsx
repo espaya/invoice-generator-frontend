@@ -11,9 +11,7 @@ import CompanySettings from "../controllers/CompanySettingsController";
 export default function Header() {
   const apiBase = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
-
   const { user, setUser } = useUser();
-
   const [companySettings, setCompanySettings] = useState({});
   const [loading, setLoading] = useState(false);
 

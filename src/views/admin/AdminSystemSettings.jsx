@@ -224,7 +224,7 @@ export default function AdminSystemSettings() {
             <div className="row align-items-center justify-content-between">
               <div className="col-md-6">
                 <div className="page-title-content">
-                  <h3>Application</h3>
+                  <h3>Company Settings</h3>
                   <p className="mb-2">Manage company invoice settings</p>
                 </div>
               </div>
@@ -234,7 +234,7 @@ export default function AdminSystemSettings() {
                   <span>
                     <i className="ri-arrow-right-s-line" />
                   </span>
-                  <a href="#">Application</a>
+                  <a href="#">Company Settings</a>
                 </div>
               </div>
             </div>
@@ -249,9 +249,9 @@ export default function AdminSystemSettings() {
 
             <div className="col-md-9">
               <div className="card">
-                <div className="card-header">
+                {/* <div className="card-header">
                   <h4 className="card-title">Company Settings</h4>
-                </div>
+                </div> */}
 
                 <div className="card-body">
                   {loading ? (
@@ -438,6 +438,7 @@ export default function AdminSystemSettings() {
                             onChange={handleChange}
                           />
                         </div>
+
 
                         {/* LOGO UPLOAD */}
                         <div className="col-md-12 mb-16">

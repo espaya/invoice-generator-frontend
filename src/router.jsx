@@ -17,6 +17,7 @@ import AdminInvoice from "./views/admin/AdminInvoice";
 import AdminUsers from "./views/admin/AdminUsers";
 import AdminAddUser from "./views/admin/AdminAddUser";
 import AdminSystemSettings from "./views/admin/AdminSystemSettings";
+import WhiteLabel from "./views/admin/WhiteLabel";
 
 // Centralized route config
 export const ROUTE_CONFIG = {
@@ -95,6 +96,14 @@ export const ROUTE_CONFIG = {
     path: "/admin/dashboard/settings/system",
     element: <AdminSystemSettings />,
     name: "Admin Settings",
+    isProtected: true,
+    roles: ["admin"],
+  },
+
+  ADMIN_SYSTEM_WHITE_LABEL: {
+    path: "/admin/dashboard/settings/white-label",
+    element: <WhiteLabel />,
+    name: "Admin White Label",
     isProtected: true,
     roles: ["admin"],
   },
