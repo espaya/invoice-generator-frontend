@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import AdminSettingsMenu from "../../components/admin/admin_settings_menu";
 import AdminSidebar from "../../components/admin/admin_sidebar";
 import Header from "../../components/header";
-import Spinner from "../../components/Spinner";
+import StatWidgetSkeleton from "../../components/StatWidgetSkeleton";
 
 export default function AdminSystemSettings() {
   const apiBase = import.meta.env.VITE_API_URL;
@@ -255,7 +255,7 @@ export default function AdminSystemSettings() {
 
                 <div className="card-body">
                   {loading ? (
-                    <Spinner />
+                    <StatWidgetSkeleton />
                   ) : (
                     <form onSubmit={handleSubmit}>
                       <div className="row">

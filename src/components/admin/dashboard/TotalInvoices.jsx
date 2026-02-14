@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Spinner from "../../Spinner";
+import StatWidgetSkeleton from "../../StatWidgetSkeleton";
 
 export default function TotalInvoices() {
   const apiBase = import.meta.env.VITE_API_URL;
@@ -69,7 +70,7 @@ export default function TotalInvoices() {
     <div className="col-lg-4 col-sm-12">
       <div className="stat-widget p-20 mb-160 mb-30">
         {loading ? (
-          <Spinner />
+          <StatWidgetSkeleton/>
         ) : (
           <>
             <div className="d-flex align-items-center mb-20">

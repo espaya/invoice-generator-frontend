@@ -6,6 +6,7 @@ import Pagination from "../../controllers/Pagination";
 import Cookies from "js-cookie";
 import formatDate from "../../utils/FormatDate";
 import CompanySettings from "../../controllers/CompanySettingsController";
+import TableSkeleton from "../../components/TableSkeleton";
 
 export default function AdminInvoice() {
   const apiBase = import.meta.env.VITE_API_URL;
@@ -206,29 +207,7 @@ export default function AdminInvoice() {
                     </div>
 
                     {/* LOADING SKELETON */}
-                    {loading &&
-                      [...Array(5)].map((_, i) => (
-                        <div className="rtable-row" key={i}>
-                          <div className="rtable-cell topic-cell">
-                            <span className="placeholder col-8"></span>
-                          </div>
-                          <div className="rtable-cell category-cell">
-                            <span className="placeholder col-10"></span>
-                          </div>
-                          <div className="rtable-cell ranking-cell">
-                            <span className="placeholder col-6"></span>
-                          </div>
-                          <div className="rtable-cell impression-cell">
-                            <span className="placeholder col-6"></span>
-                          </div>
-                          <div className="rtable-cell sales-cell">
-                            <span className="placeholder col-6"></span>
-                          </div>
-                          <div className="rtable-cell earning-cell">
-                            <span className="placeholder col-4"></span>
-                          </div>
-                        </div>
-                      ))}
+                    {loading && <TableSkeleton />}
 
                     {/* INVOICE ROWS */}
                     {!loading && invoices.length > 0
