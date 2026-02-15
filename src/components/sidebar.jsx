@@ -53,6 +53,15 @@ export default function Sidebar() {
                 <span className="nav-text">Settings</span>
               </Link>
             </li>
+
+            <li>
+              <Link to={PATHS.ABOUT_APP}>
+                <span>
+                  <i className="ri-information-fill"></i>
+                </span>
+                <span className="nav-text">About App</span>
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

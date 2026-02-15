@@ -76,7 +76,6 @@ export default function AdminSidebar() {
             </Link>
           </li>
 
-
           {/* SETTINGS */}
           <li className={isActive(PATHS.ADMIN_SETTINGS) ? "active" : ""}>
             <Link to={PATHS.ADMIN_SETTINGS}>
@@ -84,6 +83,15 @@ export default function AdminSidebar() {
                 <i className="ri-settings-3-fill" />
               </span>
               <span className="nav-text">Settings</span>
+            </Link>
+          </li>
+
+          <li className={isActive(PATHS.ABOUT_APP) ? "active" : ""}>
+            <Link to={PATHS.ABOUT_APP}>
+              <span>
+                <i className="ri-information-fill"></i>
+              </span>
+              <span className="nav-text">About App</span>
             </Link>
           </li>
         </ul>

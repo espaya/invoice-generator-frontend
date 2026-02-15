@@ -1,14 +1,17 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../routes/AuthContext";
 import Cookies from "js-cookie";
 import CompanySettings from "../controllers/CompanySettingsController";
 import { PATHS } from "../router";
+import ReCAPTCHA from "react-google-recaptcha";
 
 export default function Login() {
   const navigate = useNavigate();
   const apiBase = import.meta.env.VITE_API_URL;
   const [companySettings, setCompanySettings] = useState({});
+  const [captchaToken, setCaptchaToken] = useState(null);
+  const captchaRef = useRef(null);
 
   const logo = companySettings?.logo;
 
@@ -17,6 +20,10 @@ export default function Login() {
   if (!auth) {
     throw new Error("AuthContext not found. Wrap app with AuthProvider.");
   }
+
+  const isLocalhost =
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1";
 
   const { fetchUser, setUser } = auth;
   const [loading, setLoading] = useState(false);
@@ -56,13 +63,23 @@ export default function Login() {
           Accept: "application/json",
           "X-XSRF-TOKEN": decodeURIComponent(Cookies.get("XSRF-TOKEN") || ""),
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          recaptcha_token: isLocalhost ? null : captchaToken,
+        }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
         setError(data.errors || { general: data.message });
+
+        setCaptchaToken(null);
+
+        if (captchaRef.current) {
+          captchaRef.current.reset();
+        }
+
         return;
       }
 
@@ -180,13 +197,23 @@ export default function Login() {
                     </div>
 
                     <div className="col-6 text-end">
-                      <a href="reset.html">Forgot Password?</a>
+                      <Link to={PATHS.RESET_PASSWORD}>Forgot Password?</Link>
                     </div>
                   </div>
 
+                  {!isLocalhost && (
+                    <div className="d-flex justify-content-center mt-20">
+                      <ReCAPTCHA
+                        ref={captchaRef}
+                        sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                        onChange={(token) => setCaptchaToken(token)}
+                      />
+                    </div>
+                  )}
+
                   <div className="mt-16 d-grid gap-2">
                     <button
-                      disabled={loading}
+                      disabled={loading || (!isLocalhost && !captchaToken)}
                       type="submit"
                       className="btn btn-primary mr-2"
                     >

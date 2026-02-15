@@ -22,6 +22,9 @@ import AdminViewUser from "./views/admin/AdminViewUser";
 import AdminUserInvoice from "./views/admin/AdminUserInvoice";
 import AdminUserSettings from "./views/admin/AdminUserSettings";
 import AdminSingleInvoice from "./views/admin/AdminSingleInvoice";
+import ResetPassword from "./views/ResetPassword";
+import NewPassword from "./views/NewPassword";
+import AboutApp from "./views/AboutApp";
 
 // Centralized route config
 export const ROUTE_CONFIG = {
@@ -34,8 +37,30 @@ export const ROUTE_CONFIG = {
   LOGIN: {
     path: "/",
     element: <Login />,
-    name: "Home",
+    name: "Login",
     isGuestOnly: true,
+  },
+
+  RESET_PASSWORD: {
+    path: "/reset-password",
+    element: <ResetPassword />,
+    name: "Reset Password",
+    isGuestOnly: true,
+  },
+
+  NEW_PASSWORD: {
+    path: "/reset-password/confirm",
+    element: <NewPassword />,
+    name: "New Password",
+    isGuestOnly: true,
+  },
+
+  ABOUT_APP: {
+    path: "/about-app",
+    element: <AboutApp />,
+    name: "About App",
+    isProtected: true,
+    roles: ["admin", "user"],
   },
 
   // admin routes
