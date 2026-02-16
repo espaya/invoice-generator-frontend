@@ -6,7 +6,7 @@ export default function Spinner() {
         <div className="double-bounce2"></div>
       </div>
 
-      <style jsx>{`
+      <style jsx="true">{`
         .spinner {
           width: 50px;
           height: 50px;

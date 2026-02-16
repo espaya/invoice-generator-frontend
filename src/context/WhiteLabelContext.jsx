@@ -12,29 +12,29 @@ export function WhiteLabelProvider({ children }) {
   // FETCH WHITE LABEL SETTINGS
   // ==========================
   useEffect(() => {
-    const fetchWhiteLabelCss = async () => {
-      try {
-        const res = await fetch(`${apiBase}/api/company-settings`, {
-          credentials: "include",
-          headers: {
-            Accept: "application/json",
-          },
-        });
+  const fetchWhiteLabelCss = async () => {
+    try {
+      const res = await fetch(`${apiBase}/api/company-settings`, {
+        credentials: "include",
+        headers: { Accept: "application/json" },
+      });
 
-        const data = await res.json();
-
-        if (res.ok) {
-          setCustomCss(data?.custom_css || "");
-        }
-      } catch (err) {
-        console.error("Fetch White Label CSS error:", err);
-      } finally {
-        setLoadingWhiteLabel(false);
+      if (!res.ok) {
+        console.error("Company settings fetch failed:", res.status);
+        return;
       }
-    };
 
-    fetchWhiteLabelCss();
-  }, [apiBase]);
+      const data = await res.json();
+      setCustomCss(data?.custom_css || "");
+    } catch (err) {
+      console.error("Fetch White Label CSS error:", err);
+    } finally {
+      setLoadingWhiteLabel(false);
+    }
+  };
+
+  fetchWhiteLabelCss();
+}, []);
 
   // ==========================
   // APPLY CUSTOM CSS GLOBALLY

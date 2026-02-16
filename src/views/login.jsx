@@ -92,6 +92,7 @@ export default function Login() {
       }, 0);
     } catch (err) {
       setError({ general: err.message || "An unexpected error occurred" });
+      console.log(`Message: ${err.message}`)
     } finally {
       setLoading(false);
     }

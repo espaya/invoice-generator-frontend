@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     fetchUser();
-  }, []);
+  }, [apiBase]);
 
   return (
     <AuthContext.Provider value={{ user, setUser, fetchUser, loading }}>

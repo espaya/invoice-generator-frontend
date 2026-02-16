@@ -32,7 +32,7 @@ export function UserProvider({ children }) {
 
   useEffect(() => {
     fetchUser();
-  }, [apiBase]);
+  }, []);
 
   return (
     <UserContext.Provider value={{ user, setUser, fetchUser, loadingUser }}>
