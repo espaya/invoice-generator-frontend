@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Swal from "sweetalert2";
 import { downloadInvoicePdf } from "../controllers/InvoiceActions";
 
@@ -12,6 +12,7 @@ import {
 
 import viewInvoice from "../controllers/ViewInvoice";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../routes/AuthContext";
 
 export default function InvoiceFooter({
   handlePrint,
@@ -23,6 +24,8 @@ export default function InvoiceFooter({
   setErrors,
 }) {
   const [actionLoading, setActionLoading] = useState(false);
+
+  const { user } = useContext(AuthContext);
 
   const refreshInvoice = () => {
     viewInvoice(
@@ -147,14 +150,6 @@ export default function InvoiceFooter({
     handleAction(() => deleteInvoice(invoice.invoice_number, apiBase));
   };
 
-  const handleDownloadPdf = async () => {
-    Swal.fire({
-      icon: "info",
-      title: "Coming Soon",
-      text: "PDF download will be enabled once backend PDF generation is ready.",
-    });
-  };
-
   return (
     <div className="modal-footer print-hide d-flex justify-content-between flex-wrap gap-2">
       {/* Left Actions */}
@@ -212,17 +207,23 @@ export default function InvoiceFooter({
           </button>
 
           <ul className="dropdown-menu dropdown-menu-end">
-            <li>
-              <Link to={`/user/dashboard/invoice/edit/${invoice.invoice_number}`} className="dropdown-item">
-                <i className="ri-edit-box-fill"></i> Edit Invoice
-              </Link>
-            </li>
-
-            <li>
-              <button className="dropdown-item" onClick={handleDuplicate}>
-                <i className="ri-file-copy-fill"></i> Duplicate Invoice
-              </button>
-            </li>
+            {user.role === "user" && (
+              <>
+                <li>
+                  <Link
+                    to={`/user/dashboard/invoice/edit/${invoice.invoice_number}`}
+                    className="dropdown-item"
+                  >
+                    <i className="ri-edit-box-fill"></i> Edit Invoice
+                  </Link>
+                </li>
+                <li>
+                  <button className="dropdown-item" onClick={handleDuplicate}>
+                    <i className="ri-file-copy-fill"></i> Duplicate Invoice
+                  </button>
+                </li>
+              </>
+            )}
 
             <li>
               <button

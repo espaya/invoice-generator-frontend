@@ -59,8 +59,8 @@ export const ROUTE_CONFIG = {
     path: "/about-app",
     element: <AboutApp />,
     name: "About App",
-    // isProtected: true,
-    // roles: ["admin", "user"],
+    isProtected: true,
+    roles: ["admin", "user"],
   },
 
   // admin routes

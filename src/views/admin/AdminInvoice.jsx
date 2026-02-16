@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import formatDate from "../../utils/FormatDate";
 import CompanySettings from "../../controllers/CompanySettingsController";
 import TableSkeleton from "../../components/TableSkeleton";
+import { Link } from "react-router-dom";
 
 export default function AdminInvoice() {
   const apiBase = import.meta.env.VITE_API_URL;
@@ -259,21 +260,15 @@ export default function AdminInvoice() {
                             {/* ACTIONS */}
                             <div className="rtable-cell earning-cell">
                               <div className="d-flex gap-2">
-                                <button
+                                <Link
                                   className="btn btn-sm btn-outline-info"
                                   title="View Invoice"
-                                  onClick={() =>
-                                    Swal.fire(
-                                      "View",
-                                      `Invoice ID: ${invoice.id}`,
-                                      "info",
-                                    )
-                                  }
+                                  to={`/admin/dashboard/invoice/${invoice.invoice_number}`}
                                 >
                                   <i className="ri-eye-line"></i>
-                                </button>
+                                </Link>
 
-                                <button
+                                {/* <button
                                   className="btn btn-sm btn-outline-warning"
                                   title="Edit Invoice"
                                   onClick={() =>
@@ -285,15 +280,16 @@ export default function AdminInvoice() {
                                   }
                                 >
                                   <i className="ri-edit-2-line"></i>
-                                </button>
+                                </button> */}
 
-                                <button
+                                {/* <button
                                   className="btn btn-sm btn-outline-danger"
                                   title="Delete Invoice"
                                   onClick={() => deleteInvoice(invoice.id)}
                                 >
                                   <i className="ri-delete-bin-line"></i>
-                                </button>
+                                </button> */}
+
                               </div>
                             </div>
                           </div>

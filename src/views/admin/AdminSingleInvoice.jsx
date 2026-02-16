@@ -104,7 +104,7 @@ export default function AdminSingleInvoice() {
                                   <p>
                                     Status:{" "}
                                     <span
-                                      className={`badge ${invoice.status === "success" ? "bg-primary" : "bg-danger"}`}
+                                      className={`badge ${invoice.status === "paid" ? "bg-primary" : "bg-danger"}`}
                                     >
                                       {invoice.status?.toUpperCase()}
                                     </span>
