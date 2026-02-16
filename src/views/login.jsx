@@ -171,7 +171,7 @@ export default function Login() {
                         >
                           <i
                             className={
-                              showPassword ? "ri-eye-off-line" : "ri-eye-line"
+                              showPassword ? "ri-eye-off-line text-black" : "ri-eye-line text-black"
                             }
                           ></i>
                         </button>
