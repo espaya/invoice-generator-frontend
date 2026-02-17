@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Swal from "sweetalert2";
 import Cookies from "js-cookie";
-
+import Editor from "@monaco-editor/react";
 import AdminSettingsMenu from "../../components/admin/admin_settings_menu";
 import AdminSidebar from "../../components/admin/admin_sidebar";
 import Header from "../../components/header";
@@ -158,21 +158,27 @@ export default function WhiteLabel() {
                     <StatWidgetSkeleton />
                   ) : (
                     <>
-                      <textarea
-                        placeholder=".btn-primary { background: red; }"
-                        className="form-control"
-                        rows={12}
+                      <Editor
+                        height="350px"
+                        defaultLanguage="css"
                         value={customCss}
-                        onChange={(e) => {
+                        theme="vs-dark"
+                        onChange={(value) => {
                           setHasTyped(true);
                           setSaveStatus("idle");
-                          setCustomCss(e.target.value);
+                          setCustomCss(value || "");
                         }}
-                        style={{
-                          fontFamily: "monospace",
-                          fontSize: "14px",
+                        options={{
+                          minimap: { enabled: false },
+                          fontSize: 14,
+                          wordWrap: "on",
+                          automaticLayout: true,
+                          scrollBeyondLastLine: false,
+                          tabSize: 2,
+                          formatOnPaste: true,
+                          formatOnType: true,
                         }}
-                      ></textarea>
+                      />
 
                       <small className="text-muted d-block mt-2">
                         Auto-save starts after you begin typing.

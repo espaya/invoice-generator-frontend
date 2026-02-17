@@ -1,12 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import Notification from "./notification";
 import { PATHS } from "../router";
 import { useUser } from "../context/UserContext";
 import { logoutUser } from "../routes/Logout"; // ✅ import logout helper
 import CompanySettings from "../controllers/CompanySettingsController";
+import { AuthContext } from "../routes/AuthContext";
 
 export default function Header() {
   const apiBase = import.meta.env.VITE_API_URL;
@@ -14,6 +15,7 @@ export default function Header() {
   const { user, setUser } = useUser();
   const [companySettings, setCompanySettings] = useState({});
   const [loading, setLoading] = useState(false);
+  const {user: authUser } = useContext(AuthContext);
 
   const logo = companySettings?.logo;
 
@@ -145,7 +147,11 @@ export default function Header() {
 
                     <Link
                       className="dropdown-item ps-20 pe-20 pt-10 pb-10 d-flex align-items-center border-top"
-                      to={PATHS.SETTINGS}
+                      to={
+                        authUser && authUser?.role === "admin"
+                          ? PATHS.ADMIN_SETTINGS
+                          : PATHS.SETTINGS
+                      }
                     >
                       <span className="fs-18 text-primary me-10">
                         <i className="ri-settings-3-line"></i>
