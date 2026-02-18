@@ -119,9 +119,7 @@ export default function AdminSingleCustomer() {
                 <div className="col-md-6">
                   <div className="page-title-content">
                     <h3>Profile</h3>
-                    <p className="mb-2">
-                      Welcome to Edunet Settings Profile page
-                    </p>
+                    <p className="mb-2">Customer information</p>
                   </div>
                 </div>
               </div>

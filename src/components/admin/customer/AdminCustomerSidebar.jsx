@@ -30,19 +30,6 @@ export default function AdminCustomerSidebar() {
             Invoice
           </Link>
         </li>
-
-        <li
-          className={
-            isActive(`/admin/dashboard/customers/${id}/settings`)
-              ? "active"
-              : ""
-          }
-        >
-          <Link to={`/admin/dashboard/customers/${id}/settings`}>
-            <i className="ri-arrow-right-s-line" />
-            Settings
-          </Link>
-        </li>
       </ul>
     </div>
   );
