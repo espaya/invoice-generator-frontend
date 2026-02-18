@@ -6,6 +6,7 @@ import Pagination from "../../controllers/Pagination";
 import Cookies from "js-cookie";
 import formatDate from "../../utils/FormatDate";
 import TableSkeleton from "../../components/TableSkeleton";
+import { Link } from "react-router-dom";
 
 export default function AdminCustomers() {
   const apiBase = import.meta.env.VITE_API_URL;
@@ -247,41 +248,21 @@ export default function AdminCustomers() {
                             {/* ACTIONS */}
                             <div className="rtable-cell earning-cell">
                               <div className="d-flex gap-2">
-                                <button
+                                <Link
                                   className="btn btn-sm btn-outline-info"
                                   title="View Customer"
-                                  onClick={() =>
-                                    Swal.fire(
-                                      "View Customer",
-                                      `Customer ID: ${customer.id}`,
-                                      "info",
-                                    )
-                                  }
+                                  to={`/admin/dashboard/customers/${customer.id}`}
                                 >
-                                  <i className="ri-eye-line"></i>
-                                </button>
+                                  <i className="ri-eye-line text-black"></i>
+                                </Link>
 
-                                <button
-                                  className="btn btn-sm btn-outline-warning"
-                                  title="Edit Customer"
-                                  onClick={() =>
-                                    Swal.fire(
-                                      "Edit Customer",
-                                      `Edit Customer ID: ${customer.id}`,
-                                      "info",
-                                    )
-                                  }
-                                >
-                                  <i className="ri-edit-2-line"></i>
-                                </button>
-
-                                <button
+                                <Link
                                   className="btn btn-sm btn-outline-danger"
                                   title="Delete Customer"
                                   onClick={() => deleteCustomer(customer.id)}
                                 >
-                                  <i className="ri-delete-bin-line"></i>
-                                </button>
+                                  <i className="ri-delete-bin-line text-black"></i>
+                                </Link>
                               </div>
                             </div>
                           </div>

@@ -66,7 +66,7 @@ export default function Header() {
             <div className="header-content">
               <div className="header-left">
                 <div className="brand-logo">
-                  <a className="mini-logo" href="index.html">
+                  <a className="mini-logo" href="#">
                     <img
                       src={
                         logo

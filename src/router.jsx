@@ -25,6 +25,8 @@ import AdminSingleInvoice from "./views/admin/AdminSingleInvoice";
 import ResetPassword from "./views/ResetPassword";
 import NewPassword from "./views/NewPassword";
 import AboutApp from "./views/AboutApp";
+import AdminSingleCustomer from "./views/admin/AdminSingleCustomer";
+import AdminSingleCustomerInvoice from "./views/admin/AdminSingleCustomerInvoice";
 
 // Centralized route config
 export const ROUTE_CONFIG = {
@@ -133,6 +135,22 @@ export const ROUTE_CONFIG = {
     path: "/admin/dashboard/customers",
     element: <AdminCustomers />,
     name: "Admin Customers",
+    isProtected: true,
+    roles: ["admin"],
+  },
+
+  ADMIN_CUSTOMER_SINGLE: {
+    path: "/admin/dashboard/customers/:id",
+    element: <AdminSingleCustomer />,
+    name: "Admin Customer",
+    isProtected: true,
+    roles: ["admin"],
+  },
+
+  ADMIN_CUSTOMER_SINGLE_INVOICE: {
+    path: "/admin/dashboard/customers/:id/invoice",
+    element: <AdminSingleCustomerInvoice />,
+    name: "Admin Customer Invoice",
     isProtected: true,
     roles: ["admin"],
   },

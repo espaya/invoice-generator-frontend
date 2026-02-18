@@ -32,7 +32,9 @@ export default function NotFound() {
 
                 <div className="col-auto">
                   <div className="breadcrumbs">
-                    <Link to={PATHS.HOME}>Home </Link>
+                    <Link to={user?.role === "admin" ? PATHS.ADMIN : PATHS.USER}>
+                      Home
+                    </Link>
                     <span>
                       <i className="ri-arrow-right-s-line" />
                     </span>
