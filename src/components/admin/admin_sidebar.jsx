@@ -9,7 +9,17 @@ export default function AdminSidebar() {
   const apiBase = import.meta.env.VITE_API_URL;
   const [loading, setLoading] = useState(false);
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) => {
+    if (path === PATHS.ADMIN) {
+      // exact match only for dashboard
+      return location.pathname === path;
+    }
+
+    return (
+      location.pathname === path || location.pathname.startsWith(path + "/")
+    );
+  };
+
   const logo = companySettings?.logo;
 
   useEffect(() => {

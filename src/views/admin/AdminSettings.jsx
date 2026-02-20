@@ -20,9 +20,10 @@ export default function AdminSettings() {
               <div className="row align-items-center justify-content-between">
                 <div className="col-md-6">
                   <div className="page-title-content">
-                    <h3>Profile</h3>
+                    <h3>Account Settings</h3>
                     <p className="mb-2">
-                      Welcome to Edunet Settings Profile page
+                      Manage your profile information, email address, and
+                      password.
                     </p>
                   </div>
                 </div>

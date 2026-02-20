@@ -3,17 +3,18 @@ import Spinner from "../../Spinner";
 import formatDate from "../../../utils/FormatDate";
 import CompanySettings from "../../../controllers/CompanySettingsController";
 import StatWidgetSkeleton from "../../StatWidgetSkeleton";
+import { useNavigate } from "react-router-dom";
 
 export default function InvoiceAnalytics() {
   const apiBase = import.meta.env.VITE_API_URL;
   const [companySettings, setCompanySettings] = useState([]);
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     CompanySettings(setLoading, apiBase, setCompanySettings);
   }, []);
-
 
   useEffect(() => {
     const fetchInvoices = async () => {
@@ -92,7 +93,16 @@ export default function InvoiceAnalytics() {
               </div>
 
               {invoices.map((invoice) => (
-                <div className="rtable-row" key={invoice.id}>
+                <div
+                  className="rtable-row"
+                  key={invoice.id}
+                  onClick={() =>
+                    navigate(
+                      `/user/dashboard/invoice/${invoice.invoice_number}`,
+                    )
+                  }
+                  style={{ cursor: "pointer" }}
+                >
                   {/* INVOICE */}
                   <div className="rtable-cell topic-cell">
                     <div className="rtable-cell--content title-content d-flex align-items-center">
